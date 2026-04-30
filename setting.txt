@@ -1,0 +1,2 @@
+
+https://console.cloud.google.com/storage/browser/ai-g-course-podcast;tab=objects?project=project-b93d012c-f4f2-42f4-a1e&prefix=&forceOnObjectsSortingFiltering=false

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" 
+    xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" 
+    xmlns:podcast="https://podcastindex.org/namespace/1.0" 
+    xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>G学習帳 | AI Study Guide</title>
+    <description>AI学習のガイドブック・ポッドキャストです。2人の対話を通じて基礎概念を解説します。</description>
+    <link>https://storage.googleapis.com/ai-g-course-podcast/</link>
+    <language>ja-jp</language>
+    <atom:link href="https://storage.googleapis.com/ai-g-course-podcast/podcast7.xml" rel="self" type="application/rss+xml"/>
+    <itunes:author>Professor &amp; Journalist</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:image href="https://storage.googleapis.com/ai-g-course-podcast/icon_podcast.jpg"/>
+    <itunes:category text="Education"/>
+
+    <item>
+      <title>G-U017: ニューラルネットワーク入門 ― パーセプトロン</title>
+      <description>ニューラルネットワークの最初の形を理解する。</description>
+      <pubDate>Thu, 18 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u017.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u017</guid>
+    </item>
+
+    <item>
+      <title>G-U018: 単層と多層 ― 何が変わるのか</title>
+      <description>多層化によって表現力がどう変わるかを見る。</description>
+      <pubDate>Fri, 19 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u018.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u018</guid>
+    </item>
+    <podcast:locked>no</podcast:locked>
+
+    <item>
+      <title>G-U022: 損失関数 ― 何を減らしたいのか</title>
+      <description>学習の目的を数式ではなく意味として捉える。</description>
+      <pubDate>Tue, 23 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u022.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g_u022</guid>
+    </item>
+
+    <item>
+      <title>G-U023: 勾配降下法 ― 学習はどう進むのか</title>
+      <description>パラメータ更新の基本発想を理解する。</description>
+      <pubDate>Wed, 24 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u023.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g_u023</guid>
+    </item>
+
+    <item>
+      <title>G-U024: 誤差逆伝播法 ― なぜ多層でも学習できるのか</title>
+      <description>E検定寄りの要素に軽く触れつつ、学習の中核を掴む。</description>
+      <pubDate>Thu, 25 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u024.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g_u024</guid>
+    </item>
+
+    <item>
+      <title>G-U025: 学習率 ― 速すぎても遅すぎてもだめな理由</title>
+      <description>学習率の役割と調整の感覚を理解する。</description>
+      <pubDate>Fri, 26 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u025.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g_u025</guid>
+    </item>
+
+    <item>
+      <title>G-U026: 初期値設定 ― 学習の出発点の意味</title>
+      <description>初期値が学習結果に与える影響を理解する。</description>
+      <pubDate>Sat, 27 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u026.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g_u026</guid>
+    </item>
+
+    <item>
+      <title>G-U027: 正則化 ― 過学習を抑える考え方</title>
+      <description>モデルを複雑にしすぎない工夫を学ぶ。</description>
+      <pubDate>Sun, 28 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u027.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g_u027</guid>
+    </item>
+
+    <item>
+      <title>G-U028: Dropout ― 一部を落とすとなぜ良いのか</title>
+      <description>深層学習特有の過学習対策を直感で理解する。</description>
+      <pubDate>Mon, 29 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u028.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g_u028</guid>
+    </item>
+
+    <item>
+      <title>G-U001: AIとは何か？ ― 全体地図の最初の把握</title>
+      <description>AI・機械学習・深層学習の包含関係を整理し、学習全体の最初の地図を作る。</description>
+      <pubDate>Tue, 02 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u001.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u001</guid>
+    </item>
+
+    <item>
+      <title>G-U040: LSTMとGRU ― なぜ改良が必要だったのか</title>
+      <description>長期依存問題とその対策を理解する。</description>
+      <pubDate>Sat, 10 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u040.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u040</guid>
+    </item>
+
+    <item>
+      <title>G-U030: 最適化手法の違い ― SGDからAdamまで</title>
+      <description>更新アルゴリズムの発想の違いを比較する。</description>
+      <pubDate>Wed, 31 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u030.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u030</guid>
+    </item>
+
+    <item>
+      <title>G-U029: Batch Normalization ― ...</title>
+      <description>学習の安定化手法の代表例を理解する。</description>
+      <pubDate>Tue, 30 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u029.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u029</guid>
+    </item>
+
+    <item>
+      <title>G-U031: ハイパーパラメータとは何か</title>
+      <description>学習前に人が決める設定と、その意味を理解する。</description>
+      <pubDate>Thu, 01 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u031.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u031</guid>
+    </item>
+
+    <item>
+      <title>G-U032: データ拡張 ― データを増やすとは何か</title>
+      <description>Data Augmentation の考え方と限界を学ぶ。</description>
+      <pubDate>Fri, 02 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u032.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u032</guid>
+    </item>
+
+    <item>
+      <title>G-U033: 転移学習 ― 学習済みモデルを使う理由</title>
+      <description>既存モデルを再利用する考え方を理解する。</description>
+      <pubDate>Sat, 03 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u033.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u033</guid>
+    </item>
+
+    <item>
+      <title>G-U034: ファインチューニング ― どこまで学び直すか</title>
+      <description>転移学習の実務的な使い方を整理する。</description>
+      <pubDate>Sun, 04 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u034.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u034</guid>
+    </item>
+
+    <item>
+      <title>G-U035: CNN入門 ― 画像に強い理由</title>
+      <description>畳み込みの直感と画像処理との相性を理解する。</description>
+      <pubDate>Mon, 05 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u035.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u035</guid>
+    </item>
+
+    <item>
+      <title>G-U037: Pooling ― 情報をまとめる意味</title>
+      <description>位置ずれに強くする発想を理解する。</description>
+      <pubDate>Wed, 07 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u037.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u037</guid>
+    </item>
+
+    <item>
+      <title>G-U038: 画像認識の流れ ― CNNはどこで効くのか</title>
+      <description>画像入力から判定までの流れを整理する。</description>
+      <pubDate>Thu, 08 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u038.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u038</guid>
+    </item>
+
+    <item>
+      <title>G-U039: RNN入門 ― 系列データをどう扱うか</title>
+      <description>時系列・文章のような順序あるデータの扱い方を学ぶ。</description>
+      <pubDate>Fri, 09 Feb 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u039.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u039</guid>
+    </item>
+
+    <item>
+      <title>G-U019: 重みとバイアス ― 学習されるものは何か</title>
+      <description>モデル内部で調整される要素を直感的に理解する。</description>
+      <pubDate>Sat, 20 Jan 2024 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u019.m4a" length="0" type="audio/x-m4a"/>
+      <guid isPermaLink="false">unit_g-u019</guid>
+    </item>
+  </channel>
+</rss>
