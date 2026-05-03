@@ -13,112 +13,15 @@
       <itunes:category text="Self-Improvement" />
     </itunes:category>
 
-    <item>
-      <title>G-U036: 畳み込みとフィルタ ― 何を見ているのか</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>局所特徴を捉える仕組みを学ぶ。</description>
-      <pubDate>Mon, 27 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u036_episode.m4a" length="35223698" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u036</guid>
-    </item>
+    <podcast:locked>no</podcast:locked>
 
     <item>
-      <title>G-U021: 活性化関数 ― 線形では足りない理由</title>
+      <title>G-U001: AIとは何か？ ― 全体地図の最初の把握</title>
       <link>https://github.com/cpernot/PodcastAI</link>
-      <description>非線形性が必要になる理由と代表的関数を学ぶ。</description>
-      <pubDate>Sun, 12 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u021_episode.m4a" length="39515449" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u021</guid>
-    </item>
-
-    <item>
-      <title>G-U020: 順伝播 ― 入力から出力へ</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>ネットワークがどのように計算を進めるかを整理する。</description>
-      <pubDate>Sat, 11 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u020_episode.m4a" length="33803861" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u020</guid>
-    </item>
-
-    <item>
-      <title>G-U013: 知識表現とは何か</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>人間の知識を機械に持たせるという発想を理解する。</description>
-      <pubDate>Sat, 04 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u013_episode.m4a" length="41364318" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u013</guid>
-    </item>
-
-    <item>
-      <title>G-U012: 探索の考え方 ― 組合せ爆発とは何か</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>探索問題の難しさと、第1次AIブームの限界を理解する。</description>
-      <pubDate>Fri, 03 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u012_episode.m4a" length="35380693" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u012</guid>
-    </item>
-
-    <item>
-      <title>G-U011: AI以前の発想 ― 推論・探索・記号処理</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>初期AIが何を知能と見なし、どう解こうとしたかを整理する。</description>
-      <pubDate>Thu, 02 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u011_episode.m4a" length="35313343" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u011</guid>
-    </item>
-
-    <item>
-      <title>G-U010: 機械学習の流れを一本でつなぐ</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>入力から評価まで、機械学習プロジェクトの基本工程を通しで見る。</description>
-      <pubDate>Wed, 01 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u010_episode.m4a" length="27463666" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u010</guid>
-    </item>
-
-    <item>
-      <title>G-U009: 評価の見方 ― モデルが良いとはどういうことか</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>精度だけでなく、何をもって良いモデルとみなすかを考える。</description>
-      <pubDate>Tue, 31 Mar 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u009_episode.m4a" length="34093081" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u009</guid>
-    </item>
-
-    <item>
-      <title>G-U008: なぜ深層学習が強いのか ― 特徴抽出の自動化</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>深層学習が古典的機械学習より優位になる場面を構造的に理解する。</description>
-      <pubDate>Mon, 30 Mar 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u008_episode.m4a" length="27177434" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u008</guid>
-    </item>
-
-    <item>
-      <title>G-U007: 特徴量とは何か ― 人が見る世界を数値に落とす</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>機械学習における特徴量の意味と重要性を理解する。</description>
-      <pubDate>Sun, 29 Mar 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u007_episode.m4a" length="34179738" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u007</guid>
-    </item>
-
-    <item>
-      <title>G-U006: 汎化・過学習・未学習</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>モデルがうまく学べている状態と失敗している状態を整理する。</description>
-      <pubDate>Sat, 28 Mar 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u006_episode.m4a" length="33161176" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u006</guid>
-    </item>
-
-    <item>
-      <title>G-U005: データセットの基本 ― 訓練・検証・テスト</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>学習データの分け方と、その意味を理解する。</description>
-      <pubDate>Fri, 27 Mar 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u005_episode.m4a" length="43775193" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u005</guid>
+      <description>AI・機械学習・深層学習の包含関係を整理し、学習全体の最初の地図を作る。</description>
+      <pubDate>Mon, 23 Mar 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u001_episode.m4a" length="37018034" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u001</guid>
     </item>
 
     <item>
@@ -131,15 +34,6 @@
     </item>
 
     <item>
-      <title>G-U004: 分類と回帰 ― 何を当てる問題なのか</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>教師あり学習の代表的な問題設定である分類と回帰を区別する。</description>
-      <pubDate>Thu, 26 Mar 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u004_episode.m4a" length="34735766" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u004</guid>
-    </item>
-
-    <item>
       <title>G-U003: 機械学習の基本地図 ― 教師あり・教師なし・...</title>
       <link>https://github.com/cpernot/PodcastAI</link>
       <description>機械学習の主要な枠組みを整理し、それぞれの役割と違いを掴む。</description>
@@ -149,12 +43,93 @@
     </item>
 
     <item>
-      <title>G-U015: なぜ冬の時代が来たのか</title>
+      <title>G-U004: 分類と回帰 ― 何を当てる問題なのか</title>
       <link>https://github.com/cpernot/PodcastAI</link>
-      <description>各AIブームが停滞した理由を比較して整理する。</description>
-      <pubDate>Mon, 06 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u015_episode.m4a" length="28690020" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u015</guid>
+      <description>教師あり学習の代表的な問題設定である分類と回帰を区別する。</description>
+      <pubDate>Thu, 26 Mar 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u004_episode.m4a" length="34735766" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u004</guid>
+    </item>
+
+    <item>
+      <title>G-U005: データセットの基本 ― 訓練・検証・テスト</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>学習データの分け方と、その意味を理解する。</description>
+      <pubDate>Fri, 27 Mar 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u005_episode.m4a" length="43775193" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u005</guid>
+    </item>
+
+    <item>
+      <title>G-U006: 汎化・過学習・未学習</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>モデルがうまく学べている状態と失敗している状態を整理する。</description>
+      <pubDate>Sat, 28 Mar 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u006_episode.m4a" length="33161176" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u006</guid>
+    </item>
+
+    <item>
+      <title>G-U007: 特徴量とは何か ― 人が見る世界を数値に落とす</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>機械学習における特徴量の意味と重要性を理解する。</description>
+      <pubDate>Sun, 29 Mar 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u007_episode.m4a" length="34179738" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u007</guid>
+    </item>
+
+    <item>
+      <title>G-U008: なぜ深層学習が強いのか ― 特徴抽出の自動化</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>深層学習が古典的機械学習より優位になる場面を構造的に理解する。</description>
+      <pubDate>Mon, 30 Mar 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u008_episode.m4a" length="27177434" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u008</guid>
+    </item>
+
+    <item>
+      <title>G-U009: 評価の見方 ― モデルが良いとはどういうことか</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>精度だけでなく、何をもって良いモデルとみなすかを考える。</description>
+      <pubDate>Tue, 31 Mar 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u009_episode.m4a" length="34093081" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u009</guid>
+    </item>
+
+    <item>
+      <title>G-U010: 機械学習の流れを一本でつなぐ</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>入力から評価まで、機械学習プロジェクトの基本工程を通しで見る。</description>
+      <pubDate>Wed, 01 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u010_episode.m4a" length="27463666" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u010</guid>
+    </item>
+
+    <item>
+      <title>G-U011: AI以前の発想 ― 推論・探索・記号処理</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>初期AIが何を知能と見なし、どう解こうとしたかを整理する。</description>
+      <pubDate>Thu, 02 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u011_episode.m4a" length="35313343" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u011</guid>
+    </item>
+
+    <item>
+      <title>G-U012: 探索の考え方 ― 組合せ爆発とは何か</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>探索問題の難しさと、第1次AIブームの限界を理解する。</description>
+      <pubDate>Fri, 03 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u012_episode.m4a" length="35380693" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u012</guid>
+    </item>
+
+    <item>
+      <title>G-U013: 知識表現とは何か</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>人間の知識を機械に持たせるという発想を理解する。</description>
+      <pubDate>Sat, 04 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u013_episode.m4a" length="41364318" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u013</guid>
     </item>
 
     <item>
@@ -164,6 +139,15 @@
       <pubDate>Sun, 05 Apr 2026 03:00:00 GMT</pubDate>
       <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u014_episode.m4a" length="24043942" type="audio/x-m4a" />
       <guid isPermaLink="false">unit_g-u014</guid>
+    </item>
+
+    <item>
+      <title>G-U015: なぜ冬の時代が来たのか</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>各AIブームが停滞した理由を比較して整理する。</description>
+      <pubDate>Mon, 06 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u015_episode.m4a" length="28690020" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u015</guid>
     </item>
 
     <item>
@@ -192,7 +176,31 @@
       <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u018_episode.m4a" length="34096816" type="audio/x-m4a" />
       <guid isPermaLink="false">unit_g-u018</guid>
     </item>
-    <podcast:locked>no</podcast:locked>
+    <item>
+      <title>G-U019: 重みとバイアス ― 学習されるものは何か</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>モデル内部で調整される要素を直感的に理解する。</description>
+      <pubDate>Fri, 10 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u019_episode.m4a" length="18740353" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u019</guid>
+    </item>
+  <item>
+      <title>G-U020: 順伝播 ― 入力から出力へ</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>ネットワークがどのように計算を進めるかを整理する。</description>
+      <pubDate>Sat, 11 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u020_episode.m4a" length="33803861" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u020</guid>
+    </item>
+
+    <item>
+      <title>G-U021: 活性化関数 ― 線形では足りない理由</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>非線形性が必要になる理由と代表的関数を学ぶ。</description>
+      <pubDate>Sun, 12 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u021_episode.m4a" length="39515449" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u021</guid>
+    </item>
 
     <item>
       <title>G-U022: 損失関数 ― 何を減らしたいのか</title>
@@ -258,21 +266,12 @@
     </item>
 
     <item>
-      <title>G-U001: AIとは何か？ ― 全体地図の最初の把握</title>
+      <title>G-U029: Batch Normalization ― ...</title>
       <link>https://github.com/cpernot/PodcastAI</link>
-      <description>AI・機械学習・深層学習の包含関係を整理し、学習全体の最初の地図を作る。</description>
-      <pubDate>Mon, 23 Mar 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u001_episode.m4a" length="37018034" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u001</guid>
-    </item>
-
-    <item>
-      <title>G-U040: LSTMとGRU ― なぜ改良が必要だったのか</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>長期依存問題とその対策を理解する。</description>
-      <pubDate>Fri, 01 May 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u040_episode.m4a" length="10900272" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u040</guid>
+      <description>学習の安定化手法の代表例を理解する。</description>
+      <pubDate>Mon, 20 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u029_episode.m4a" length="32138863" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u029</guid>
     </item>
 
     <item>
@@ -282,15 +281,6 @@
       <pubDate>Tue, 21 Apr 2026 03:00:00 GMT</pubDate>
       <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u030_episode.m4a" length="26134968" type="audio/x-m4a" />
       <guid isPermaLink="false">unit_g-u030</guid>
-    </item>
-
-    <item>
-      <title>G-U029: Batch Normalization ― ...</title>
-      <link>https://github.com/cpernot/PodcastAI</link>
-      <description>学習の安定化手法の代表例を理解する。</description>
-      <pubDate>Mon, 20 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u029_episode.m4a" length="32138863" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u029</guid>
     </item>
 
     <item>
@@ -339,6 +329,15 @@
     </item>
 
     <item>
+      <title>G-U036: 畳み込みとフィルタ ― 何を見ているのか</title>
+      <link>https://github.com/cpernot/PodcastAI</link>
+      <description>局所特徴を捉える仕組みを学ぶ。</description>
+      <pubDate>Mon, 27 Apr 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u036_episode.m4a" length="35223698" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u036</guid>
+    </item>
+
+    <item>
       <title>G-U037: Pooling ― 情報をまとめる意味</title>
       <link>https://github.com/cpernot/PodcastAI</link>
       <description>位置ずれに強くする発想を理解する。</description>
@@ -366,12 +365,13 @@
     </item>
 
     <item>
-      <title>G-U019: 重みとバイアス ― 学習されるものは何か</title>
+      <title>G-U040: LSTMとGRU ― なぜ改良が必要だったのか</title>
       <link>https://github.com/cpernot/PodcastAI</link>
-      <description>モデル内部で調整される要素を直感的に理解する。</description>
-      <pubDate>Fri, 10 Apr 2026 03:00:00 GMT</pubDate>
-      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u019_episode.m4a" length="18740353" type="audio/x-m4a" />
-      <guid isPermaLink="false">unit_g-u019</guid>
+      <description>長期依存問題とその対策を理解する。</description>
+      <pubDate>Fri, 01 May 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://storage.googleapis.com/ai-g-course-podcast/g-u040_episode.m4a" length="10900272" type="audio/x-m4a" />
+      <guid isPermaLink="false">unit_g-u040</guid>
     </item>
-  </channel>
+
+    </channel>
 </rss>
