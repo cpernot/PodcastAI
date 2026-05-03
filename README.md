@@ -28,8 +28,23 @@ To sync all local files and the RSS feed to GCS without extracting anything new:
 
 ## 🛠️ Status & Monitoring
 - **Logs**: Check `deploy_log.txt` for a history of all deployments.
-- **RSS Feed**: View/Edit `podcast7.xml` to manage episode metadata.
+- **RSS Feed**: View/Edit `podcast9.xml` to manage episode metadata.
 - **Ordering**: The feed is automatically sorted by **Unit Number** (newest first).
+
+## 📱 Troubleshooting iPhone Deployment
+Podcast apps on iOS (like Apple Podcasts) are aggressive at caching RSS feeds and audio files. If you update an episode's audio or metadata but don't see the changes on your phone, use the **"Cache Buster"** method:
+
+### The "Cache Buster" Method
+To force a refresh, you must change the URLs that the podcast app tracks:
+1.  **Rename the XML file**: Increment the version (e.g., from `podcast8.xml` to `podcast9.xml`).
+2.  **Rename the Audio files**: Add a suffix (e.g., `g-u001_episode.m4a`).
+3.  **Update the Feed**: Ensure the `<enclosure>` tags point to the new filenames.
+4.  **Update atom:link**: Ensure the `<atom:link rel="self">` in the XML matches the new cloud URL.
+
+The `deploy_podcast.ps1` script is currently configured to handle the `_episode.m4a` suffix and target `podcast9.xml` automatically.
+
+### Check xml file structure
+use: https://www.castfeedvalidator.com/
 
 ## 🔒 Security & Permissions
 Ensure you have run the following once to make the bucket public:
