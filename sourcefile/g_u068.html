@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>G-U068：音声処理・推薦・異常検知・時系列予測</title><style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style></head><body><div class="container"><div class="page"><div class="page-header"><div class="header-badge">G検定 共有学習ユニット</div><h1>G-U068：音声処理・推薦・異常検知・時系列予測</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+<p class="lead">AIの応用は画像や文章だけではない。音声、履歴データ、センサログ、時系列データなどに対し、何を予測・抽出・推薦するのかという観点で、周辺応用を地図として整理する。</p><div class="summary"><strong>このユニットの要点</strong><ul><li>音声処理・推薦・異常検知・時系列予測は、一見ばらばらでも入力構造と目的で統一的に理解できる。</li><li>推薦は『何を選ばせるか』、異常検知は『普段と違うものを見つけるか』、時系列予測は『未来の値をどこまで当てるか』が本質である。</li><li>応用領域が違っても、データ品質、評価指標、リーク、ドリフト、説明可能性が重要なのは共通している。</li></ul></div><h2>1. 今回の位置づけ</h2>
+<p>前回までで画像認識と自然言語処理という代表的応用を見た。本ユニットでは、それ以外の頻出分野である音声処理、推薦システム、異常検知、時系列予測を整理する。ここでは個別アルゴリズムの暗記より、<strong>どんな入力を受け、何を出力し、何に使うか</strong>を共通の見方で整理することが重要である。</p>
+<h2>2. 結論</h2>
+<p>周辺応用を理解するには、<strong>入力データがどのような構造を持ち、何を出力したいのか</strong>を見るとよい。音声処理は連続音声信号から文字や話者情報を取り出し、推薦は履歴から次の選択肢を提示し、異常検知は通常から外れた事象を見つけ、時系列予測は過去の時間変化から未来を予測する。</p>
+<div class="note"><strong>重要：</strong>これらは見た目の業務が違っても、「入力の構造」と「意思決定の単位」で並べると共通性が見える。</div>
+<h2>3. 音声処理</h2>
+<p>音声処理では、自動音声認識（ASR）、話者認識、感情推定、音声合成などが代表的である。特に重要なのは、音声から文字列を取り出す音声認識であり、コールセンター、会議録、字幕生成、音声UIなどに使われる。</p>
+<p>音声は時間方向に連続した信号であり、雑音、話速、方言、マイク性能、専門用語などの影響を受けやすい。そのため、前処理、特徴抽出、自己教師あり学習、Transformer 系モデルなどが活用される。</p>
+<div class="section-box">
+<p><strong>音声処理の典型価値：</strong>記録の自動化、入力負荷低減、検索可能化、会話分析</p>
+</div>
+<h2>4. 推薦システム</h2>
+<p>推薦は、EC、動画配信、音楽配信、広告、ニュース配信などで中心的な技術である。目的は、膨大な選択肢の中から、そのユーザにとって価値が高そうな候補を絞り込むことにある。</p>
+<table>
+<tr><th>方式</th><th>発想</th><th>例</th><th>注意点</th></tr>
+<tr><td>コンテンツベース</td><td>似た属性のアイテムを勧める</td><td>似たジャンルの映画</td><td>新規性が弱くなりやすい</td></tr>
+<tr><td>協調フィルタリング</td><td>似た行動のユーザを利用する</td><td>この商品を買った人はこれも買う</td><td>コールドスタートに弱い</td></tr>
+<tr><td>ハイブリッド</td><td>属性と履歴を組み合わせる</td><td>動画配信やECの実サービス</td><td>設計が複雑になる</td></tr>
+</table>
+<p>推薦では、精度だけでなく、多様性、探索性、偏り、フィルターバブルなども重要な評価観点になる。</p>
+<h2>5. 異常検知</h2>
+<p>異常検知は、正常データが多く異常データが少ない場面で重要になる。設備故障予兆、不正取引検知、侵入検知、品質異常検知、医療モニタリングなどが典型例である。</p>
+<p>難しいのは、<strong>異常の定義が曖昧で、異常サンプルが十分集まらないこと</strong>である。そのため、正常パターンからの逸脱として見る方法、再構成誤差で見る方法、予測誤差で見る方法などが使われる。</p>
+<div class="warn"><strong>注意：</strong>異常検知では false positive が多いと運用が回らなくなる。見つけることと、現場で使えることは別問題である。</div>
+<h2>6. 時系列予測</h2>
+<p>時系列予測では、売上、需要、負荷、株価、温度、センサ値など時間変化するデータを扱う。特徴は、データ点が独立ではなく、<strong>順序・季節性・トレンド・周期性</strong>を持つことである。</p>
+<ul>
+<li><strong>短期予測：</strong>翌日の需要、数時間先の負荷、設備直近挙動</li>
+<li><strong>中長期予測：</strong>在庫計画、保守計画、経営予測</li>
+<li><strong>系列分類：</strong>波形や振動のパターン認識</li>
+</ul>
+<p>時系列では未来情報の混入、すなわちリークに特に注意が必要である。ランダム分割が不適切な場合も多く、時間順を保った検証が必須になる。</p>
+<h2>7. 4分野を並べたときの共通論点</h2>
+<table>
+<tr><th>分野</th><th>主入力</th><th>主出力</th><th>共通論点</th></tr>
+<tr><td>音声処理</td><td>音声波形</td><td>文字列、話者、意味</td><td>雑音、時間構造、話者差</td></tr>
+<tr><td>推薦</td><td>履歴、属性</td><td>推奨候補</td><td>コールドスタート、偏り、多様性</td></tr>
+<tr><td>異常検知</td><td>ログ、波形、取引記録</td><td>異常スコア、異常判定</td><td>不均衡、誤警報、異常定義</td></tr>
+<tr><td>時系列予測</td><td>時間順データ</td><td>未来値や状態</td><td>リーク、季節性、概念ドリフト</td></tr>
+</table>
+<p>この表から分かるように、応用名は違っても、データ構造・評価・運用の難しさは比較可能である。</p>
+<h2>8. 他概念との関係</h2>
+<ul>
+<li><strong>RNN / LSTM / Attention：</strong>系列データや音声、時系列に関わる。</li>
+<li><strong>自己教師あり学習：</strong>音声や時系列の事前学習で有効。</li>
+<li><strong>Precision / Recall：</strong>異常検知の評価で特に重要。</li>
+<li><strong>バイアス：</strong>推薦システムの偏りやフィルターバブル問題と関係する。</li>
+</ul>
+<h2>9. 試験ポイント</h2>
+<ul>
+<li>推薦・異常検知・時系列予測を目的と入力で整理できるか。</li>
+<li>異常検知では異常データが少ないこと、時系列では順序保持が重要なことを押さえているか。</li>
+<li>推薦は精度だけでなく多様性や偏りも重要であることを理解しているか。</li>
+</ul>
+<h2>10. 次回への橋渡し</h2>
+<p>周辺応用の地図が見えたので、次はそれらが各産業でどのように価値へ変わるかを見る。製造、医療、金融、物流など、<strong>産業別応用</strong>を入力・出力・制約の観点から整理する。</p>
+<div class="unit-nav"><a href="g_u067.html">← G-U067</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u069.html">G-U069 →</a></div></div></div></div></body></html>

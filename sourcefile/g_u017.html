@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U017：ニューラルネットワーク入門 ― パーセプトロン</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U017：ニューラルネットワーク入門 ― パーセプトロン</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+
+<div class="lead">
+<p>前回は、第3次AIブームが成立した背景として、データ・計算力・アルゴリズムの三条件を整理した。ここからは、その中心技術であるニューラルネットワークの内部へ入っていく。その出発点が <strong>パーセプトロン</strong> である。</p>
+<p>このユニットの核心は、パーセプトロンを単なる昔のモデルとしてではなく、<strong>入力を重み付きで合成し、閾値的に判断する最小単位</strong> として理解することにある。後続で扱う重み、バイアス、活性化関数、順伝播は、すべてこの基本形からつながっていく。</p>
+</div>
+
+<h2>1. 今回の位置づけ</h2>
+<p>G検定では、深層学習の詳細数式まで求められるわけではないが、ニューラルネットワークの基本構造は説明できる必要がある。そこで、まず一番単純なモデルとしてパーセプトロンを理解する。これは「複数の入力を受け取り、ある基準を超えたら出力を変える」という、きわめて基本的な判定器である。</p>
+<p>パーセプトロンを押さえておくと、後に出てくる多層化、重み更新、活性化関数の話が「いきなり複雑な仕組み」に見えなくなる。まずは、<strong>AIが入力から判断を作る最小骨格</strong> として見ることが重要である。</p>
+
+<h2>2. 結論</h2>
+<div class="section-box">
+<p>パーセプトロンとは、<strong>入力に重みを掛けて足し合わせ、その値に基づいて出力を決める単純なモデル</strong> である。ここで重要なのは、各入力が同じ重みでは扱われず、重要度の違いが数値として表現される点にある。</p>
+<p>言い換えると、パーセプトロンは「どの入力をどれくらい重視するか」を重みとして持つ、最も基本的なニューラルネットワークである。</p>
+</div>
+
+<h2>3. どういう発想のモデルか</h2>
+<p>人間が何かを判断するとき、すべての要素を等しく扱うわけではない。たとえば融資判断なら、年収、返済履歴、負債額、勤続年数などを見ても、それぞれの重要度は同じではない。パーセプトロンは、こうした「要素ごとの重み付け」を数理的に表したものと考えると分かりやすい。</p>
+<p>各入力に重みを掛けて合計し、その合計がある基準を超えたかどうかで出力を変える。これは一見単純だが、すでに「入力の寄与度を調整する」という学習の根本要素を含んでいる。</p>
+
+<h2>4. 基本構造</h2>
+<p>パーセプトロンの基本は、次の流れで理解できる。</p>
+<ol>
+  <li>複数の入力を受け取る</li>
+  <li>各入力に重みを掛ける</li>
+  <li>それらを合計する</li>
+  <li>基準を超えたかどうかで出力する</li>
+</ol>
+<p>このとき出力は、古典的には 0/1 のような二値で表されることが多い。つまり、パーセプトロンは「分類器」の最初の原型と見なせる。</p>
+<table>
+<thead><tr><th>要素</th><th>意味</th><th>直感的な見方</th></tr></thead>
+<tbody>
+<tr><td>入力</td><td>判定の材料となる値</td><td>特徴や観測値</td></tr>
+<tr><td>重み</td><td>各入力の重要度</td><td>どれをどれだけ重視するか</td></tr>
+<tr><td>合計値</td><td>重み付きの総合評価</td><td>総合点</td></tr>
+<tr><td>閾値的判断</td><td>基準を超えたかどうか</td><td>合格/不合格の境界</td></tr>
+</tbody>
+</table>
+
+<div class="section-box">
+<p><strong>図で見る：</strong>パーセプトロンの基本構造</p>
+<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+  <defs><marker id="a17" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#1e40af"/></marker></defs>
+  <!-- inputs -->
+  <rect x="30" y="40" width="90" height="36" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="75" y="63" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="sans-serif">入力 x₁</text>
+  <rect x="30" y="92" width="90" height="36" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="75" y="115" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="sans-serif">入力 x₂</text>
+  <rect x="30" y="144" width="90" height="36" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="75" y="167" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="sans-serif">入力 x₃</text>
+  <!-- weight arrows -->
+  <line x1="120" y1="58" x2="315" y2="105" stroke="#60a5fa" stroke-width="2" marker-end="url(#a17)"/>
+  <line x1="120" y1="110" x2="315" y2="110" stroke="#60a5fa" stroke-width="2" marker-end="url(#a17)"/>
+  <line x1="120" y1="162" x2="315" y2="115" stroke="#60a5fa" stroke-width="2" marker-end="url(#a17)"/>
+  <!-- weight labels -->
+  <rect x="168" y="55" width="52" height="22" rx="4" fill="white" stroke="#c5cfe0" stroke-width="1"/>
+  <text x="194" y="70" text-anchor="middle" fill="#1e40af" font-size="12" font-family="sans-serif">w₁</text>
+  <rect x="168" y="98" width="52" height="22" rx="4" fill="white" stroke="#c5cfe0" stroke-width="1"/>
+  <text x="194" y="113" text-anchor="middle" fill="#1e40af" font-size="12" font-family="sans-serif">w₂</text>
+  <rect x="168" y="140" width="52" height="22" rx="4" fill="white" stroke="#c5cfe0" stroke-width="1"/>
+  <text x="194" y="155" text-anchor="middle" fill="#1e40af" font-size="12" font-family="sans-serif">w₃</text>
+  <!-- sum node -->
+  <circle cx="355" cy="110" r="42" fill="#1e40af" stroke="#1e3a6e" stroke-width="2"/>
+  <text x="355" y="106" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">重み付き</text>
+  <text x="355" y="122" text-anchor="middle" fill="white" font-size="13" font-family="sans-serif">和 Σwᵢxᵢ</text>
+  <!-- bias -->
+  <rect x="340" y="20" width="90" height="32" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="385" y="41" text-anchor="middle" fill="#1e3a6e" font-size="12" font-family="sans-serif">バイアス b</text>
+  <line x1="385" y1="52" x2="370" y2="68" stroke="#93c5fd" stroke-width="1.5" marker-end="url(#a17)"/>
+  <!-- threshold -->
+  <line x1="397" y1="110" x2="480" y2="110" stroke="#1e40af" stroke-width="2" marker-end="url(#a17)"/>
+  <rect x="480" y="82" width="120" height="56" rx="8" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="540" y="107" text-anchor="middle" fill="#1e3a6e" font-size="12" font-weight="bold" font-family="sans-serif">活性化関数</text>
+  <text x="540" y="125" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">閾値・非線形変換</text>
+  <!-- output -->
+  <line x1="600" y1="110" x2="680" y2="110" stroke="#1e40af" stroke-width="2" marker-end="url(#a17)"/>
+  <rect x="680" y="82" width="120" height="56" rx="8" fill="#1e40af"/>
+  <text x="740" y="107" text-anchor="middle" fill="white" font-size="13" font-weight="bold" font-family="sans-serif">出力</text>
+  <text x="740" y="125" text-anchor="middle" fill="#bfdbfe" font-size="11" font-family="sans-serif">0 or 1（分類）</text>
+  <!-- label -->
+  <text x="450" y="200" text-anchor="middle" fill="#4b5563" font-size="12" font-family="sans-serif">重み(w)は学習で更新される。各入力の「重要度」を表す</text>
+</svg>
+</div>
+<h2>5. なぜニューラルネットの原型といえるのか</h2>
+<p>現代のニューラルネットワークは、より複雑で、連続値を扱い、多層化され、活性化関数も組み込まれる。しかし、基本骨格を見ると、やっていることは「入力を受けて重み付き合成を行い、その結果を次へ渡す」という点で連続している。</p>
+<p>つまりパーセプトロンは、後の複雑なモデルを理解するための最小模型である。ここで重みの意味が分かれば、次に出るバイアスや多層化も自然に理解しやすくなる。</p>
+<div class="note">
+<p><strong>理解のコツ：</strong>パーセプトロンは「脳を完全再現するモデル」ではなく、判断の数理的な最小単位として見る。生物学的比喩に引っ張られすぎない方が整理しやすい。</p>
+</div>
+
+<h2>6. 何ができて、何ができないのか</h2>
+<p>単一のパーセプトロンは、単純な境界で分けられる問題には対応しやすい。しかし、複雑に入り組んだ関係を表現するのは苦手である。この限界が、後に「多層化」の必要性につながる。</p>
+<p>よく知られた文脈では、単一パーセプトロンでは XOR のような線形分離できない問題をうまく表せないことが指摘される。G検定では数式詳細よりも、<strong>単純なモデルには表現力の限界があり、それが多層ニューラルネットへ発展した</strong> という流れが重要である。</p>
+
+<h2>7. パーセプトロンと学習</h2>
+<p>パーセプトロンは固定重みの判定器としてだけでなく、誤りをもとに重みを調整する学習則とも結びついている。つまり、最初から適切な重みを人が完全に与えるのではなく、データを見ながら重みを更新していく発想がここにある。</p>
+<p>この点は、古典的AIのルールベースとは大きく異なる。ルールベースは知識を人が記述するが、パーセプトロン以降の学習系モデルは、<strong>重要度そのものをデータから調整する</strong>。現代AIへつながる転換点はここにある。</p>
+
+<h2>8. 現場との接点</h2>
+<p>現場でニューラルネットを直接設計しなくても、パーセプトロンの理解は役立つ。なぜなら、AIがブラックボックスに見える場面でも、「入力を重み付きで合成して判断している」と説明するだけで、少なくとも何もない魔法ではないと伝えやすくなるからである。</p>
+<p>また、特徴量の重要度や入力寄与を考えるとき、パーセプトロンの発想は直感的な出発点になる。高度なモデルでも、基本骨格としての「重み付き判断」は生き残っている。</p>
+
+<h2>9. 他概念との関係</h2>
+<p>次ユニットでは、単層から多層へ進むことで何が変わるのかを見る。ここで大事なのは、パーセプトロン自体を過大評価しないことである。単一ユニットは単純だが、<strong>それを層として重ね、非線形性を加え、学習を安定化することで現代AIへ近づく</strong>。したがって、パーセプトロンは完成形ではなく、出発点である。</p>
+
+<h2>10. 試験ポイント</h2>
+<ul>
+  <li>パーセプトロンは、<strong>入力の重み付き和に基づいて出力を決める基本モデル</strong> である。</li>
+  <li>重みは入力の重要度を表す。</li>
+  <li>単一パーセプトロンには表現力の限界があり、多層化の必要性につながる。</li>
+  <li>ルール記述型AIとは異なり、重みをデータから調整する発想を持つ。</li>
+</ul>
+
+<h2>11. 人に説明するなら</h2>
+<div class="section-box">
+<p>パーセプトロンは、ニューラルネットワークの最も基本的な形である。複数の入力を受け取り、それぞれに重みを掛けて合計し、その結果に基づいて出力を決める。ここで重みは「どの情報をどれくらい重視するか」を表しており、現代の深層学習でもこの発想は基本として残っている。</p>
+</div>
+
+<h2>12. 次回への橋渡し</h2>
+<p>単一のパーセプトロンは、ニューラルネットの原型として重要だが、それだけでは表現力に限界がある。次は、<strong>単層と多層</strong> の違いを通じて、なぜ層を増やすことに意味があるのかを見ていく。</p>
+<p class="small">次ユニット：G-U018「単層と多層 ― 何が変わるのか」</p>
+
+
+<div class="unit-nav"><a href="g_u016.html">← G-U016</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u018.html">G-U018 →</a></div>
+</div></article></div>
+</body>
+</html>

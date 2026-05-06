@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>G-U066：画像認識の実応用</title><style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style></head><body><div class="container"><div class="page"><div class="page-header"><div class="header-badge">G検定 共有学習ユニット</div><h1>G-U066：画像認識の実応用</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+<p class="lead">画像AIは、単に画像からラベルを出す技術ではない。分類・物体検出・セグメンテーション・OCR など、出力形式の違いによって役割が分かれ、業務価値や導入上の難しさも変わる。本ユニットでは、画像認識応用を入力・出力・価値の観点で整理する。</p><div class="summary"><strong>このユニットの要点</strong><ul><li>画像認識の主要タスクは、分類・物体検出・セグメンテーション・OCR に整理できる。</li><li>同じ『画像AI』でも、必要な出力粒度が違えば使うモデルや評価指標も変わる。</li><li>実務ではモデル精度だけでなく、撮像条件・アノテーション・運用設計が成否を左右する。</li></ul></div><h2>1. 今回の位置づけ</h2>
+<p>前ブロックまでで、CNN、データ拡張、転移学習、評価指標の基礎を学んだ。本ユニットは、それらを実際の画像AI応用へ結び付ける入口である。G検定では、画像AIを『画像分類に使う技術』と単純化せず、どのような出力を返すかで応用を区別できることが重要になる。</p>
+<h2>2. 結論</h2>
+<p>画像認識の実応用を理解する最短ルートは、<strong>画像1枚から何を出力したいか</strong>で整理することである。ラベルだけなら分類、位置付きラベルなら物体検出、画素ごとの意味付けならセグメンテーション、文字列なら OCR である。技術選択は『モデルの流行』でなく、『業務が欲しい出力粒度』で決まる。</p>
+<div class="note"><strong>重要：</strong>『画像を見て何か判断する』という点は共通でも、意思決定に必要な出力単位が違えば、別タスクとして扱う必要がある。</div>
+<div class="section-box">
+<p><strong>図で見る：</strong>画像認識の代表タスク ― 出力粒度の違い</p>
+<svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+  <!-- Task1: 分類 -->
+  <rect x="15" y="20" width="200" height="160" rx="10" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="115" y="44" text-anchor="middle" fill="#1e40af" font-size="13" font-weight="bold" font-family="sans-serif">画像分類</text>
+  <rect x="35" y="54" width="160" height="70" rx="6" fill="#dbeafe"/>
+  <text x="115" y="94" text-anchor="middle" fill="#1e40af" font-size="28" font-family="sans-serif">🔩</text>
+  <text x="115" y="142" text-anchor="middle" fill="#1e3a6e" font-size="12" font-family="sans-serif">出力：ラベル</text>
+  <text x="115" y="160" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">「良品 / 不良品」</text>
+
+  <!-- Task2: 物体検出 -->
+  <rect x="230" y="20" width="200" height="160" rx="10" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="330" y="44" text-anchor="middle" fill="#1e40af" font-size="13" font-weight="bold" font-family="sans-serif">物体検出</text>
+  <rect x="250" y="54" width="160" height="70" rx="6" fill="#dbeafe"/>
+  <rect x="270" y="70" width="44" height="38" rx="2" fill="none" stroke="#dc2626" stroke-width="2"/>
+  <rect x="356" y="62" width="36" height="30" rx="2" fill="none" stroke="#dc2626" stroke-width="2"/>
+  <text x="330" y="142" text-anchor="middle" fill="#1e3a6e" font-size="12" font-family="sans-serif">出力：位置 + ラベル</text>
+  <text x="330" y="160" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">バウンディングボックス</text>
+
+  <!-- Task3: セグメンテーション -->
+  <rect x="445" y="20" width="200" height="160" rx="10" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="545" y="44" text-anchor="middle" fill="#1e40af" font-size="13" font-weight="bold" font-family="sans-serif">セグメンテーション</text>
+  <rect x="465" y="54" width="160" height="70" rx="6" fill="#dbeafe"/>
+  <!-- colored segments -->
+  <path d="M465,70 Q510,54 545,54 Q580,54 625,70 L625,124 L465,124 Z" fill="#93c5fd" opacity=".6"/>
+  <path d="M465,110 Q500,88 545,100 Q580,88 625,110 L625,124 L465,124 Z" fill="#6ee7b7" opacity=".7"/>
+  <text x="545" y="142" text-anchor="middle" fill="#1e3a6e" font-size="12" font-family="sans-serif">出力：画素ごとのクラス</text>
+  <text x="545" y="160" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">欠陥領域を画素単位で特定</text>
+
+  <!-- Task4: OCR -->
+  <rect x="660" y="20" width="225" height="160" rx="10" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="772" y="44" text-anchor="middle" fill="#1e40af" font-size="13" font-weight="bold" font-family="sans-serif">OCR（文字認識）</text>
+  <rect x="680" y="54" width="185" height="70" rx="6" fill="#dbeafe"/>
+  <text x="772" y="82" text-anchor="middle" fill="#1e3a6e" font-size="16" font-weight="bold" font-family="sans-serif">A-12345</text>
+  <text x="772" y="104" text-anchor="middle" fill="#4b5563" font-size="12" font-family="sans-serif">帳票・ナンバー</text>
+  <text x="772" y="142" text-anchor="middle" fill="#1e3a6e" font-size="12" font-family="sans-serif">出力：文字列</text>
+  <text x="772" y="160" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">画像中の文字をデータ化</text>
+</svg>
+</div>
+<h2>3. 代表タスクの整理</h2>
+<table>
+<tr><th>タスク</th><th>出力</th><th>典型用途</th><th>主な難しさ</th></tr>
+<tr><td>画像分類</td><td>画像全体に対するラベル</td><td>良品/不良品、病変有無、品種識別</td><td>位置情報は得られない。背景差に影響されやすい。</td></tr>
+<tr><td>物体検出</td><td>位置とクラス</td><td>人数カウント、部品有無、自動運転</td><td>小物体、重なり、見落とし、アノテーション負荷</td></tr>
+<tr><td>セグメンテーション</td><td>画素単位のクラス</td><td>医用画像、路面領域抽出、外観欠陥領域抽出</td><td>教師作成コストが高く、境界が曖昧</td></tr>
+<tr><td>OCR</td><td>文字列</td><td>帳票読取、ナンバープレート、検査票認識</td><td>傾き、汚れ、フォント差、レイアウト崩れ</td></tr>
+</table>
+<p>分類は「あるかないか」を見るのに向き、物体検出は「どこにあるか」が必要な場面に向く。セグメンテーションは対象形状や面積が重要な場面で使われ、OCR は画像中の文字情報を直接データ化する。</p>
+<h2>4. 実務での価値の出方</h2>
+<p>画像AIは、人間の目視業務を完全置換するだけでなく、候補提示、見逃し低減、作業標準化、全数検査化など、複数の価値を生む。</p>
+<ul>
+<li><strong>製造業：</strong>外観検査、位置ずれ確認、部品有無確認、設備監視</li>
+<li><strong>医療：</strong>X線・CT・病理画像の診断支援、病変候補抽出</li>
+<li><strong>小売：</strong>棚在庫監視、レジ補助、来店者分析</li>
+<li><strong>インフラ：</strong>ひび割れ検出、腐食点検、道路監視</li>
+</ul>
+<p>ここで重要なのは、画像AIが常に最終判定者になるわけではない点である。多くの現場では、人の確認前に候補を絞る、疑わしい箇所を強調する、といった補助的導入が先に進む。</p>
+<h2>5. 画像AIで難しいこと</h2>
+<p>画像認識では、モデル精度よりも前段条件で失敗することが多い。照明変動、ピント、背景、撮像角度、汚れ、カメラ個体差などによって、本番画像分布が学習時とずれると性能が落ちやすい。</p>
+<div class="warn"><strong>注意：</strong>PoCで高精度でも、本番の撮像条件が違えば崩れる。画像AIでは『モデル性能』と『撮像システム設計』を分けて考えてはいけない。</div>
+<p>そのため実務では、データ拡張、追加学習、閾値調整だけでなく、照明固定、治具整備、撮像位置の規格化なども重要になる。</p>
+<h2>6. 他概念との関係</h2>
+<ul>
+<li><strong>CNN：</strong>画像の局所構造を扱う基本モデル。</li>
+<li><strong>転移学習：</strong>画像データが少ない現場で特に有効。</li>
+<li><strong>データ拡張：</strong>撮像ゆらぎへの頑健性向上に効く。</li>
+<li><strong>混同行列：</strong>どのクラス同士を誤るか理解するのに重要。</li>
+<li><strong>Precision / Recall：</strong>見逃し優先か誤検出抑制優先かで重視が変わる。</li>
+</ul>
+<h2>7. 試験ポイント</h2>
+<ul>
+<li>分類・物体検出・セグメンテーション・OCR の違いを説明できるか。</li>
+<li>『画像認識』が単一タスクではなく、出力形式で分かれることを理解しているか。</li>
+<li>実導入の課題が、モデルだけでなく撮像条件や運用設計にあることを押さえているか。</li>
+</ul>
+<h2>8. 次回への橋渡し</h2>
+<p>画像が分かったら、次は言語である。画像では画素や領域を扱ったが、自然言語処理では単語列や文脈を扱う。次回は、分類・抽出・検索・要約・対話へ広がる <strong>自然言語処理の実応用</strong> を整理する。</p>
+<div class="unit-nav"><a href="G-U061-065_cap.html">← G-U061-065_cap</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u067.html">G-U067 →</a></div></div></div></div></body></html>

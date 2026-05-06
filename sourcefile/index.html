@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G検定学習インデックス</title>
+  <style>
+    :root{
+      --bg:#f7f8fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --sub:#4b5563;
+      --line:#d1d5db;
+      --accent:#1e40af;
+      --accent-soft:#dbeafe;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.75;
+    }
+    .container{max-width:1160px; margin:0 auto; padding:32px 24px 64px;}
+    .hero, .card{
+      background:var(--card);
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:24px 28px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.05);
+    }
+    .hero{margin-bottom:24px;}
+    h1,h2{color:#111827; line-height:1.35; margin-top:0;}
+    h1{font-size:2rem; margin-bottom:0.6em;}
+    h2{font-size:1.35rem; border-left:6px solid var(--accent); padding-left:12px; margin-top:0;}
+    .lead{
+      background:var(--accent-soft);
+      border:1px solid #d9e1ea;
+      border-radius:10px;
+      padding:14px 16px;
+      margin:14px 0 0;
+    }
+    ul{margin:0.5em 0 0.2em 1.2em; padding:0;}
+    table{width:100%; border-collapse:collapse; margin-top:14px; font-size:0.98rem;}
+    th, td{border:1px solid var(--line); padding:12px 14px; vertical-align:top;}
+    th{background:#f3f4f6; text-align:left;}
+    a{color:#1f4f8f; text-decoration:none;}
+    a:hover{text-decoration:underline;}
+    .small{color:var(--sub); font-size:0.94rem;}
+  .hero{background:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);color:#fff;border:none;position:relative;}.hero h1,.hero h2,.hero p{color:#fff;}.hero a{color:#bfdbfe;}.hero .lead{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25);}.hero-logo{position:absolute;top:18px;right:22px;width:80px;opacity:0.9;mix-blend-mode:multiply;}
+</style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero"><img src="logo.png" alt="AIAD" class="hero-logo">
+      <h1>G検定学習インデックス</h1>
+      <p>
+        このページは、G検定学習プロジェクトの配布用インデックスである。
+        同一ディレクトリ内に各ユニットの学習HTMLを順次追加し、このページから参照する。
+      </p>
+      <div class="lead">
+        <strong>目的</strong>
+        <ul>
+          <li>JDLAのG検定範囲を、実務で説明可能なレベルで体系的に理解する。</li>
+          <li>単なる暗記ではなく、「なぜそうなるのか」「現場でどう効くのか」を説明できる理解を重視する。</li>
+          <li>関連するE検定領域は、必要に応じて一部触れ、G検定理解を立体化する。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>学習ユニット一覧</h2>
+      <p class="small">
+        通常ユニットに加え、5ユニットごとに cap サマリーを配置する前提で一覧化している。未作成ファイルはリンク切れのままで問題ない運用とする。
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:14%;">ユニットID</th>
+            <th style="width:30%;">タイトル</th>
+            <th>概要</th>
+            <th style="width:16%;">リンク</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>G-U001</td>
+            <td>AIとは何か？ ― 全体地図の最初の把握</td>
+            <td>AI・機械学習・深層学習の包含関係を整理し、学習全体の最初の地図を作る。</td>
+            <td><a href="g_u001.html">G-U001 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U002</td>
+            <td>AIの歴史 ― なぜブームと冬が繰り返されるのか</td>
+            <td>AIブームの流れを追い、人間が書く方式から学ばせる方式への転換を理解する。</td>
+            <td><a href="g_u002.html">G-U002 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U003</td>
+            <td>機械学習の基本地図 ― 教師あり・教師なし・強化学習</td>
+            <td>機械学習の主要な枠組みを整理し、それぞれの役割と違いを掴む。</td>
+            <td><a href="g_u003.html">G-U003 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U004</td>
+            <td>分類と回帰 ― 何を当てる問題なのか</td>
+            <td>教師あり学習の代表的な問題設定である分類と回帰を区別する。</td>
+            <td><a href="g_u004.html">G-U004 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U005</td>
+            <td>データセットの基本 ― 訓練・検証・テスト</td>
+            <td>学習データの分け方と、その意味を理解する。</td>
+            <td><a href="g_u005.html">G-U005 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U001-005_cap</td>
+            <td>G検定対策サマリー（U001〜U005）</td>
+            <td>ユニット 001〜005 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U001-005_cap.html">G-U001-005_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U006</td>
+            <td>汎化・過学習・未学習</td>
+            <td>モデルがうまく学べている状態と失敗している状態を整理する。</td>
+            <td><a href="g_u006.html">G-U006 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U007</td>
+            <td>特徴量とは何か ― 人が見る世界を数値に落とす</td>
+            <td>機械学習における特徴量の意味と重要性を理解する。</td>
+            <td><a href="g_u007.html">G-U007 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U008</td>
+            <td>なぜ深層学習が強いのか ― 特徴抽出の自動化</td>
+            <td>深層学習が古典的機械学習より優位になる場面を構造的に理解する。</td>
+            <td><a href="g_u008.html">G-U008 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U009</td>
+            <td>評価の見方 ― モデルが良いとはどういうことか</td>
+            <td>精度だけでなく、何をもって良いモデルとみなすかを考える。</td>
+            <td><a href="g_u009.html">G-U009 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U010</td>
+            <td>機械学習の流れを一本でつなぐ</td>
+            <td>入力から評価まで、機械学習プロジェクトの基本工程を通しで見る。</td>
+            <td><a href="g_u010.html">G-U010 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U006-010_cap</td>
+            <td>G検定対策サマリー（U006〜U010）</td>
+            <td>ユニット 006〜010 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U006-010_cap.html">G-U006-010_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U011</td>
+            <td>AI以前の発想 ― 推論・探索・記号処理</td>
+            <td>初期AIが何を知能と見なし、どう解こうとしたかを整理する。</td>
+            <td><a href="g_u011.html">G-U011 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U012</td>
+            <td>探索の考え方 ― 組合せ爆発とは何か</td>
+            <td>探索問題の難しさと、第1次AIブームの限界を理解する。</td>
+            <td><a href="g_u012.html">G-U012 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U013</td>
+            <td>知識表現とは何か</td>
+            <td>人間の知識を機械に持たせるという発想を理解する。</td>
+            <td><a href="g_u013.html">G-U013 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U014</td>
+            <td>エキスパートシステムの発想と限界</td>
+            <td>第2次AIブームの中心であった知識ベース型AIを学ぶ。</td>
+            <td><a href="g_u014.html">G-U014 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U015</td>
+            <td>なぜ冬の時代が来たのか</td>
+            <td>各AIブームが停滞した理由を比較して整理する。</td>
+            <td><a href="g_u015.html">G-U015 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U011-015_cap</td>
+            <td>G検定対策サマリー（U011〜U015）</td>
+            <td>ユニット 011〜015 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U011-015_cap.html">G-U011-015_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U016</td>
+            <td>第3次AIブームの条件 ― データ・計算力・アルゴリズム</td>
+            <td>現代AIが伸びた背景条件を俯瞰する。</td>
+            <td><a href="g_u016.html">G-U016 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U017</td>
+            <td>ニューラルネットワーク入門 ― パーセプトロン</td>
+            <td>ニューラルネットワークの最初の形を理解する。</td>
+            <td><a href="g_u017.html">G-U017 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U018</td>
+            <td>単層と多層 ― 何が変わるのか</td>
+            <td>多層化によって表現力がどう変わるかを見る。</td>
+            <td><a href="g_u018.html">G-U018 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U019</td>
+            <td>重みとバイアス ― 学習されるものは何か</td>
+            <td>モデル内部で調整される要素を直感的に理解する。</td>
+            <td><a href="g_u019.html">G-U019 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U020</td>
+            <td>順伝播 ― 入力から出力へ</td>
+            <td>ネットワークがどのように計算を進めるかを整理する。</td>
+            <td><a href="g_u020.html">G-U020 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U016-020_cap</td>
+            <td>G検定対策サマリー（U016〜U020）</td>
+            <td>ユニット 016〜020 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U016-020_cap.html">G-U016-020_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U021</td>
+            <td>活性化関数 ― 線形では足りない理由</td>
+            <td>非線形性が必要になる理由と代表的関数を学ぶ。</td>
+            <td><a href="g_u021.html">G-U021 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U022</td>
+            <td>損失関数 ― 何を減らしたいのか</td>
+            <td>学習の目的を数式ではなく意味として捉える。</td>
+            <td><a href="g_u022.html">G-U022 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U023</td>
+            <td>勾配降下法 ― 学習はどう進むのか</td>
+            <td>パラメータ更新の基本発想を理解する。</td>
+            <td><a href="g_u023.html">G-U023 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U024</td>
+            <td>誤差逆伝播法 ― なぜ多層でも学習できるのか</td>
+            <td>E検定寄りの要素に軽く触れつつ、学習の中核を掴む。</td>
+            <td><a href="g_u024.html">G-U024 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U025</td>
+            <td>学習率 ― 速すぎても遅すぎてもだめな理由</td>
+            <td>学習率の役割と調整の感覚を理解する。</td>
+            <td><a href="g_u025.html">G-U025 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U021-025_cap</td>
+            <td>G検定対策サマリー（U021〜U025）</td>
+            <td>ユニット 021〜025 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U021-025_cap.html">G-U021-025_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U026</td>
+            <td>初期値設定 ― 学習の出発点の意味</td>
+            <td>初期値が学習結果に与える影響を理解する。</td>
+            <td><a href="g_u026.html">G-U026 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U027</td>
+            <td>正則化 ― 過学習を抑える考え方</td>
+            <td>モデルを複雑にしすぎない工夫を学ぶ。</td>
+            <td><a href="g_u027.html">G-U027 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U028</td>
+            <td>Dropout ― 一部を落とすとなぜ良いのか</td>
+            <td>深層学習特有の過学習対策を直感で理解する。</td>
+            <td><a href="g_u028.html">G-U028 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U029</td>
+            <td>Batch Normalization ― 学習を安定させる工夫</td>
+            <td>学習の安定化手法の代表例を理解する。</td>
+            <td><a href="g_u029.html">G-U029 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U030</td>
+            <td>最適化手法の違い ― SGDからAdamまで</td>
+            <td>更新アルゴリズムの発想の違いを比較する。</td>
+            <td><a href="g_u030.html">G-U030 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U026-030_cap</td>
+            <td>G検定対策サマリー（U026〜U030）</td>
+            <td>ユニット 026〜030 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U026-030_cap.html">G-U026-030_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U031</td>
+            <td>ハイパーパラメータとは何か</td>
+            <td>学習前に人が決める設定と、その意味を理解する。</td>
+            <td><a href="g_u031.html">G-U031 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U032</td>
+            <td>データ拡張 ― データを増やすとは何か</td>
+            <td>Data Augmentation の考え方と限界を学ぶ。</td>
+            <td><a href="g_u032.html">G-U032 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U033</td>
+            <td>転移学習 ― 学習済みモデルを使う理由</td>
+            <td>既存モデルを再利用する考え方を理解する。</td>
+            <td><a href="g_u033.html">G-U033 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U034</td>
+            <td>ファインチューニング ― どこまで学び直すか</td>
+            <td>転移学習の実務的な使い方を整理する。</td>
+            <td><a href="g_u034.html">G-U034 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U035</td>
+            <td>CNN入門 ― 画像に強い理由</td>
+            <td>畳み込みの直感と画像処理との相性を理解する。</td>
+            <td><a href="g_u035.html">G-U035 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U031-035_cap</td>
+            <td>G検定対策サマリー（U031〜U035）</td>
+            <td>ユニット 031〜035 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U031-035_cap.html">G-U031-035_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U036</td>
+            <td>畳み込みとフィルタ ― 何を見ているのか</td>
+            <td>局所特徴を捉える仕組みを学ぶ。</td>
+            <td><a href="g_u036.html">G-U036 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U037</td>
+            <td>Pooling ― 情報をまとめる意味</td>
+            <td>位置ずれに強くする発想を理解する。</td>
+            <td><a href="g_u037.html">G-U037 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U038</td>
+            <td>画像認識の流れ ― CNNはどこで効くのか</td>
+            <td>画像入力から判定までの流れを整理する。</td>
+            <td><a href="g_u038.html">G-U038 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U039</td>
+            <td>RNN入門 ― 系列データをどう扱うか</td>
+            <td>時系列・文章のような順序あるデータの扱い方を学ぶ。</td>
+            <td><a href="g_u039.html">G-U039 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U040</td>
+            <td>LSTMとGRU ― なぜ改良が必要だったのか</td>
+            <td>長期依存問題とその対策を理解する。</td>
+            <td><a href="g_u040.html">G-U040 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U036-040_cap</td>
+            <td>G検定対策サマリー（U036〜U040）</td>
+            <td>ユニット 036〜040 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U036-040_cap.html">G-U036-040_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U041</td>
+            <td>Attention ― どこを見るべきかを学ぶ</td>
+            <td>Attention の直感と、その革命性を理解する。</td>
+            <td><a href="g_u041.html">G-U041 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U042</td>
+            <td>Transformer入門 ― 現代AIの基盤</td>
+            <td>Transformer の発想を数式抜きで掴む。</td>
+            <td><a href="g_u042.html">G-U042 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U043</td>
+            <td>Embedding ― 言葉や対象をベクトルで表す</td>
+            <td>表現学習の中核である埋め込みを理解する。</td>
+            <td><a href="g_u043.html">G-U043 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U044</td>
+            <td>大規模言語モデルの基本 ― なぜ自然な文が出るのか</td>
+            <td>LLM の基本的な学習目的と振る舞いを理解する。</td>
+            <td><a href="g_u044.html">G-U044 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U045</td>
+            <td>生成モデルとは何か</td>
+            <td>生成系AIの全体像と識別モデルとの違いを捉える。</td>
+            <td><a href="g_u045.html">G-U045 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U041-045_cap</td>
+            <td>G検定対策サマリー（U041〜U045）</td>
+            <td>ユニット 041〜045 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U041-045_cap.html">G-U041-045_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U046</td>
+            <td>Autoencoder ― 圧縮して学ぶ</td>
+            <td>自己再構成を通じた表現学習の発想を学ぶ。</td>
+            <td><a href="g_u046.html">G-U046 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U047</td>
+            <td>VAE ― 生成可能な潜在表現</td>
+            <td>確率的生成モデルへの拡張を理解する。</td>
+            <td><a href="g_u047.html">G-U047 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U048</td>
+            <td>GAN ― 競わせて生成する</td>
+            <td>生成器と識別器の対立構造を掴む。</td>
+            <td><a href="g_u048.html">G-U048 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U049</td>
+            <td>拡散モデル ― ノイズから戻す発想</td>
+            <td>近年の画像生成モデルの基本アイデアを学ぶ。</td>
+            <td><a href="g_u049.html">G-U049 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U050</td>
+            <td>自己教師あり学習 ― ラベルなしで学ぶ</td>
+            <td>大量未ラベルデータを活かす考え方を理解する。</td>
+            <td><a href="g_u050.html">G-U050 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U046-050_cap</td>
+            <td>G検定対策サマリー（U046〜U050）</td>
+            <td>ユニット 046〜050 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U046-050_cap.html">G-U046-050_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U051</td>
+            <td>強化学習入門 ― 報酬で学ぶ</td>
+            <td>強化学習の基本枠組みを整理する。</td>
+            <td><a href="g_u051.html">G-U051 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U052</td>
+            <td>状態・行動・報酬 ― 強化学習の構成要素</td>
+            <td>エージェントと環境の関係を明確にする。</td>
+            <td><a href="g_u052.html">G-U052 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U053</td>
+            <td>価値関数と方策 ― 何を良しとするか</td>
+            <td>評価と行動選択の考え方を学ぶ。</td>
+            <td><a href="g_u053.html">G-U053 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U054</td>
+            <td>探索と活用 ― 試すか使うか</td>
+            <td>強化学習に固有のジレンマを理解する。</td>
+            <td><a href="g_u054.html">G-U054 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U055</td>
+            <td>Q学習 ― 行動価値を学ぶ</td>
+            <td>強化学習の代表的な基本手法を掴む。</td>
+            <td><a href="g_u055.html">G-U055 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U051-055_cap</td>
+            <td>G検定対策サマリー（U051〜U055）</td>
+            <td>ユニット 051〜055 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U051-055_cap.html">G-U051-055_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U056</td>
+            <td>DQN ― 深層学習と強化学習の接続</td>
+            <td>強化学習と深層学習が結びつく意味を理解する。</td>
+            <td><a href="g_u056.html">G-U056 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U057</td>
+            <td>データ前処理 ― 学習の前に何を整えるのか</td>
+            <td>前処理の重要性と代表的な論点を整理する。</td>
+            <td><a href="g_u057.html">G-U057 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U058</td>
+            <td>欠損値・外れ値・データ品質</td>
+            <td>現実データの扱いにくさと向き合う。</td>
+            <td><a href="g_u058.html">G-U058 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U059</td>
+            <td>バイアスとデータの偏り</td>
+            <td>偏ったデータが結果にどう影響するかを理解する。</td>
+            <td><a href="g_u059.html">G-U059 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U060</td>
+            <td>混同行列 ― 間違い方を見る</td>
+            <td>分類器の評価をより立体的に見る方法を学ぶ。</td>
+            <td><a href="g_u060.html">G-U060 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U056-060_cap</td>
+            <td>G検定対策サマリー（U056〜U060）</td>
+            <td>ユニット 056〜060 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U056-060_cap.html">G-U056-060_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U061</td>
+            <td>Accuracy, Precision, Recall, F1</td>
+            <td>代表的評価指標の違いと使い分けを理解する。</td>
+            <td><a href="g_u061.html">G-U061 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U062</td>
+            <td>ROCとAUC ― しきい値をまたいで評価する</td>
+            <td>分類器評価の広い見方を学ぶ。</td>
+            <td><a href="g_u062.html">G-U062 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U063</td>
+            <td>回帰評価 ― 誤差を見るとはどういうことか</td>
+            <td>MAE, MSE, RMSE などの意味を掴む。</td>
+            <td><a href="g_u063.html">G-U063 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U064</td>
+            <td>データリーク ― うまく見えて実はだめな例</td>
+            <td>不正な評価につながる典型的失敗を理解する。</td>
+            <td><a href="g_u064.html">G-U064 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U065</td>
+            <td>MLOpsの概観 ― 作って終わりではない</td>
+            <td>モデル運用・監視・更新の基本を俯瞰する。</td>
+            <td><a href="g_u065.html">G-U065 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U061-065_cap</td>
+            <td>G検定対策サマリー（U061〜U065）</td>
+            <td>ユニット 061〜065 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U061-065_cap.html">G-U061-065_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U066</td>
+            <td>画像認識の実応用</td>
+            <td>画像AIが現場でどう使われるかを整理する。</td>
+            <td><a href="g_u066.html">G-U066 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U067</td>
+            <td>自然言語処理の実応用</td>
+            <td>NLP の代表用途と価値を理解する。</td>
+            <td><a href="g_u067.html">G-U067 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U068</td>
+            <td>音声処理・推薦・異常検知・時系列予測</td>
+            <td>周辺応用をまとめて地図化する。</td>
+            <td><a href="g_u068.html">G-U068 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U069</td>
+            <td>製造業・医療・金融・物流への応用</td>
+            <td>業務分野ごとの入力・出力・価値・注意点を整理する。</td>
+            <td><a href="g_u069.html">G-U069 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U070</td>
+            <td>生成AI・基盤モデル・Instruction Tuning</td>
+            <td>現代生成AIの用語と構造を整理する。</td>
+            <td><a href="g_u070.html">G-U070 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U066-070_cap</td>
+            <td>G検定対策サマリー（U066〜U070）</td>
+            <td>ユニット 066〜070 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U066-070_cap.html">G-U066-070_cap を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U071</td>
+            <td>RLHF・RAG・幻覚</td>
+            <td>生成AI運用上の重要論点を理解する。</td>
+            <td><a href="g_u071.html">G-U071 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U072</td>
+            <td>AI倫理・法務・ガバナンス</td>
+            <td>公平性、説明可能性、著作権、社会実装を統合して整理する。</td>
+            <td><a href="g_u072.html">G-U072 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U073</td>
+            <td>総合整理① ― AI史から現代AIまでを一本にする</td>
+            <td>歴史・技術・応用を一つの流れとして再整理する。</td>
+            <td><a href="g_u073.html">G-U073 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U074</td>
+            <td>総合整理② ― 主要モデル比較</td>
+            <td>CNN, RNN, Transformer, GAN などの違いを俯瞰する。</td>
+            <td><a href="g_u074.html">G-U074 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U075</td>
+            <td>総合整理③ ― 部署で説明するための型</td>
+            <td>学んだ内容を他者へ説明するための実務的なまとめにする。</td>
+            <td><a href="g_u075.html">G-U075 を開く</a></td>
+          </tr>
+          <tr>
+            <td>G-U071-075_cap</td>
+            <td>G検定対策サマリー（U071〜U075）</td>
+            <td>ユニット 071〜075 について、用語定義・年号・人物・混同しやすい点を補強した試験対策用サマリー。</td>
+            <td><a href="G-U071-075_cap.html">G-U071-075_cap を開く</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>

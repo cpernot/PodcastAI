@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U042：Transformer入門 ― 現代AIの基盤</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U042：Transformer入門 ― 現代AIの基盤</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+<div class="lead"><p>Transformer は、RNN の逐次処理に依存せず、Attention を中核として系列全体を扱う設計である。いまのLLMやマルチモーダルAIの背後にはほぼ必ず Transformer 的発想がある。ここでは「なぜ時代を変えたのか」を、構造・性能・実務の三方向からつかむ。</p></div>
+<h2>1. 今回の位置づけ</h2>
+<p>Attention 単体の価値を前ユニットで学んだ。Transformer は、その Attention を補助機能ではなく主役に据えたアーキテクチャである。</p>
+<p>G検定の学習では、Transformer を単なる流行語として覚えるのでなく、<strong>なぜ RNN 中心の時代を置き換えたのか</strong> を説明できることが重要である。</p>
+<h2>2. 結論</h2>
+<div class="section-box"><p>Transformer とは、Self-Attention を中心に、系列内の要素同士の関係を並列的に処理するモデルである。</p>
+<p>逐次処理の制約からある程度自由になったことで学習効率が上がり、大規模データ・大規模計算との相性が良く、現代AIの基盤となった。</p></div>
+<h2>3. 何が RNN と違うのか</h2>
+<p>RNN は時刻 t の状態を t+1 へ渡す構造なので、基本的に前から順に計算する必要がある。これに対し Transformer は、各要素が系列全体を参照する Self-Attention を使うため、並列計算と相性がよい。</p>
+<p>この差は単なる実装都合ではない。大規模学習では、GPU / TPU 上でどれだけ並列化しやすいかが性能向上と直結する。Transformer は、性能面だけでなく計算資源の使い方の面でも時代に合っていた。</p>
+<table><thead><tr><th>観点</th><th>RNN</th><th>Transformer</th></tr></thead><tbody>
+<tr><td>処理方式</td><td>逐次処理が基本</td><td>並列処理しやすい</td></tr>
+<tr><td>長距離依存</td><td>保持が難しい</td><td>直接参照しやすい</td></tr>
+<tr><td>中心技術</td><td>再帰構造</td><td>Self-Attention</td></tr>
+<tr><td>大規模化との相性</td><td>制約が大きい</td><td>比較的良い</td></tr>
+</tbody></table>
+<div class="section-box">
+<p><strong>図で見る：</strong>Transformerのアーキテクチャ概要</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" style="width:100%;height:auto;display:block;">
+  <defs><marker id="a42" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#1e40af" /></marker></defs>
+  
+  <rect x="40" y="20" width="340" height="190" rx="12" fill="#eff6ff" stroke="#1e40af" stroke-width="2" />
+  <text x="210" y="44" text-anchor="middle" fill="#1e3a6e" font-size="14" font-weight="bold" font-family="sans-serif">エンコーダ</text>
+  
+  <rect x="60" y="55" width="300" height="44" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" />
+  <text x="210" y="73" text-anchor="middle" fill="#1e3a6e" font-size="12" font-weight="bold" font-family="sans-serif">Self-Attention</text>
+  <text x="210" y="90" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">入力内の全要素間の関係を計算</text>
+  <rect x="60" y="110" width="300" height="36" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" />
+  <text x="210" y="133" text-anchor="middle" fill="#1e3a6e" font-size="12" font-family="sans-serif">Feed-Forward（位置ごとの変換）</text>
+  <rect x="60" y="155" width="300" height="36" rx="6" fill="#60a5fa" stroke="#1e40af" stroke-width="1.5" />
+  <text x="210" y="174" text-anchor="middle" fill="#111827" font-size="12" font-family="sans-serif">× N層（積み重ねる）</text>
+  
+  <text x="210" y="223" text-anchor="middle" fill="#1e40af" font-size="12" font-family="sans-serif">入力トークン + 位置エンコーディング</text>
+
+  
+  <line x1="383" y1="115" x2="517" y2="115" stroke="#1e40af" stroke-width="2.5" marker-end="url(#a42)" />
+  <text x="450" y="108" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">コンテキスト</text>
+
+  
+  <rect x="520" y="20" width="340" height="190" rx="12" fill="#f0fdf4" stroke="#10b981" stroke-width="2" />
+  <text x="690" y="44" text-anchor="middle" fill="#065f46" font-size="14" font-weight="bold" font-family="sans-serif">デコーダ</text>
+  <rect x="540" y="55" width="300" height="44" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="1.5" />
+  <text x="690" y="73" text-anchor="middle" fill="#065f46" font-size="12" font-weight="bold" font-family="sans-serif">Masked Self-Attention</text>
+  <text x="690" y="90" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">過去のトークンだけを参照</text>
+  <rect x="540" y="110" width="300" height="36" rx="6" fill="#d1fae5" stroke="#10b981" stroke-width="1.5" />
+  <text x="690" y="133" text-anchor="middle" fill="#065f46" font-size="12" font-family="sans-serif">Cross-Attention（エンコーダ参照）</text>
+  <rect x="540" y="155" width="300" height="36" rx="6" fill="#6ee7b7" stroke="#10b981" stroke-width="1.5" />
+  <text x="690" y="174" text-anchor="middle" fill="#065f46" font-size="12" font-family="sans-serif">× N層 → 出力トークン生成</text>
+  <text x="690" y="223" text-anchor="middle" fill="#065f46" font-size="12" font-family="sans-serif">出力トークン（翻訳・生成結果）</text>
+  
+  <text x="450" y="13" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">LLMは主にデコーダ部分を拡張した構成。並列処理が得意でスケールしやすい。</text>
+</svg>
+</div>
+<h2>4. なぜ時代を変えたのか</h2>
+<p>第一に、長い文脈を扱いやすかったこと。第二に、並列学習しやすく、大規模データと大規模計算資源を活用しやすかったこと。第三に、自然言語だけでなく画像や音声にも発想を広げやすかったことが大きい。</p>
+<p>つまり Transformer の本質は、一つのテクニックの勝利ではなく、<strong>現代の計算環境と学習スケールに適応した設計</strong> にある。だからこそ、LLM の時代に入ってから決定的な存在になった。</p>
+<h2>5. Self-Attention の意味</h2>
+<p>Self-Attention では、系列中の各要素が、同じ系列の他の要素を見て自分の表現を更新する。単語は孤立した記号ではなく、文脈の中で意味を変えるため、この仕組みは自然言語に非常によく合う。</p>
+<p>たとえば「bank」という語が金融機関か川岸かは周囲の語による。Self-Attention は、こうした文脈依存の意味形成をモデルの内部で行える点が強い。</p>
+<h2>6. 位置情報はどうするのか</h2>
+<p>注意すべき点として、Transformer は単純な Self-Attention だけでは順序情報を自動では持たない。そのため、位置エンコーディングなどの仕組みで「何番目の要素か」を与える必要がある。</p>
+<p>ここは試験で問われやすい。Attention が強いからといって、順序が自然に分かるわけではない。順序情報をどう埋め込むかは設計上の重要点である。</p>
+<div class="note"><p>Transformer は「順序を完全に捨てた」のではなく、「順序を別の方法で与える」モデルである。</p></div>
+<h2>7. 限界や注意点</h2>
+<p>Attention を全要素間で計算する都合上、系列長が非常に長いと計算量・メモリ負荷が大きくなりやすい。このため、長文や長時間系列では効率化の工夫が必要になる。</p>
+<p>また、Transformer が万能という理解も危うい。強力ではあるが、タスクや制約によっては別構造が有利な場合もある。G検定では、優位性と限界の両方をセットで理解しておくとよい。</p>
+<h2>8. 実務との接点</h2>
+<p>現在のチャットボット、要約、検索、コード補完、画像と言語をまたぐモデルの多くは Transformer 系を土台としている。したがって、Transformer を理解することは「現代AIの標準部品表」を理解することに近い。</p>
+<p>実務で重要なのは、Transformer の数式を暗記することではなく、なぜ大量データ・大量計算・長文脈処理に向いているのかを説明できることである。これが、モデル選定や説明責任の基礎になる。</p>
+<h2>9. 試験ポイント</h2>
+<ul>
+  <li>Transformer は Self-Attention を中心にしたモデルである。</li>
+  <li>RNN と比べて並列処理しやすく、長距離依存を扱いやすい。</li>
+  <li>順序情報は位置エンコーディングなどで補う。</li>
+  <li>LLM の基盤技術として重要である。</li>
+</ul>
+<h2>10. 人に説明するなら</h2>
+<div class="section-box"><p>Transformer は、Attention を中心に系列全体の関係をまとめて見るモデルである。RNNのように順番に処理する必要が薄く、並列計算しやすいため、大規模学習と非常に相性がよい。この性質が、現代の言語AIや生成AIの急速な発展を支えている。</p></div>
+<h2>11. 次回への橋渡し</h2>
+<p>ただし Transformer を理解するには、Self-Attention のみならず、モデル内部で「語や対象がどのようなベクトルで表されるか」も押さえる必要がある。そこで重要になるのが Embedding である。</p>
+<p>次ユニットでは、単語や対象を数値ベクトルへ写す発想を整理し、表現学習の基礎としての埋め込みを扱う。</p>
+<p class="small">次ユニット：G-U043「Embedding ― 言葉や対象をベクトルで表す」</p>
+<div class="unit-nav"><a href="g_u041.html">← G-U041</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u043.html">G-U043 →</a></div>
+
+</div></article></div>
+</body>
+</html>

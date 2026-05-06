@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U048：GAN ― 競わせて生成する</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U048：GAN ― 競わせて生成する</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+
+<div class="lead">
+<p>前回の VAE では、潜在空間を確率的に整えながら生成可能性を持たせる発想を見た。今回はそれとは全く異なる方向から高品質生成を目指す <strong>GAN（Generative Adversarial Network）</strong> を扱う。</p>
+<p>GAN は、<strong>生成器と識別器の対立</strong> を学習の原動力にする。ここでは「何を競わせているのか」「なぜ競争が生成品質につながるのか」を押さえることが重要である。</p>
+</div>
+
+<h2>1. 今回の位置づけ</h2>
+<p>生成モデルには、潜在空間を整えるタイプ、自己回帰的に並べるタイプ、ノイズ除去として考えるタイプなど、複数の流儀がある。GAN はその中でも、<strong>評価者をモデルの中に組み込んで競わせる</strong>ところに特徴がある。</p>
+<p>VAE が「分布を整える」ことで生成を扱ったのに対し、GAN は「本物に見えるかどうか」をめぐる対戦を通じて生成器を強くしていく。ここが一番の違いである。</p>
+
+<h2>2. 結論</h2>
+<div class="section-box">
+<p>GAN とは、<strong>偽物データを作る Generator と、それが本物か偽物かを見分ける Discriminator を競争させることで学習する生成モデル</strong> である。</p>
+<p>本質は、識別器を外部評価器ではなく内部の対戦相手として置き、<strong>本物に見えるサンプルを生成する力を対立的学習で高める</strong>ことにある。</p>
+</div>
+
+<h2>3. 2つのネットワーク</h2>
+<p>GAN は二つのネットワークから成る。Generator はランダムノイズから偽サンプルを作る。Discriminator は入力されたサンプルが本物データか、Generator が作った偽物かを判定する。</p>
+<p>学習が進むにつれ、Generator は Discriminator をだますように改善され、Discriminator はより厳密に見分けようと改善される。このいたちごっこが、生成品質を高める駆動力になる。</p>
+<table>
+<thead><tr><th>役割</th><th>ネットワーク</th><th>目標</th></tr></thead>
+<tbody>
+<tr><td>生成側</td><td>Generator</td><td>本物らしい偽データを作る</td></tr>
+<tr><td>判定側</td><td>Discriminator</td><td>本物と偽物を見分ける</td></tr>
+<tr><td>全体</td><td>対立的学習</td><td>生成品質を高める</td></tr>
+</tbody>
+</table>
+
+<div class="section-box">
+<p><strong>図で見る：</strong>GANの学習構造 ― GeneratorとDiscriminatorの対立</p>
+<svg viewBox="0 0 900 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+  <defs>
+    <marker id="a48f" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#1e40af"/></marker>
+    <marker id="a48r" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#dc2626"/></marker>
+  </defs>
+  <!-- Noise input -->
+  <rect x="20" y="75" width="100" height="60" rx="8" fill="#f3f4f6" stroke="#c5cfe0" stroke-width="1.5"/>
+  <text x="70" y="102" text-anchor="middle" fill="#4b5563" font-size="12" font-weight="bold" font-family="sans-serif">ランダム</text>
+  <text x="70" y="118" text-anchor="middle" fill="#4b5563" font-size="12" font-family="sans-serif">ノイズ z</text>
+  <!-- Generator -->
+  <line x1="120" y1="105" x2="168" y2="105" stroke="#1e40af" stroke-width="2" marker-end="url(#a48f)"/>
+  <rect x="168" y="65" width="160" height="80" rx="10" fill="#1e40af" stroke="#1e3a6e" stroke-width="2"/>
+  <text x="248" y="100" text-anchor="middle" fill="white" font-size="14" font-weight="bold" font-family="sans-serif">Generator</text>
+  <text x="248" y="118" text-anchor="middle" fill="#bfdbfe" font-size="11" font-family="sans-serif">偽データを生成</text>
+  <!-- fake output -->
+  <line x1="328" y1="105" x2="376" y2="105" stroke="#1e40af" stroke-width="2" marker-end="url(#a48f)"/>
+  <rect x="376" y="75" width="120" height="60" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="436" y="102" text-anchor="middle" fill="#92400e" font-size="12" font-weight="bold" font-family="sans-serif">偽データ</text>
+  <text x="436" y="118" text-anchor="middle" fill="#92400e" font-size="11" font-family="sans-serif">（Fake）</text>
+  <!-- Real data -->
+  <rect x="376" y="148" width="120" height="50" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="1.5"/>
+  <text x="436" y="170" text-anchor="middle" fill="#065f46" font-size="12" font-weight="bold" font-family="sans-serif">本物データ</text>
+  <text x="436" y="186" text-anchor="middle" fill="#065f46" font-size="11" font-family="sans-serif">（Real）</text>
+  <!-- Discriminator -->
+  <line x1="496" y1="105" x2="544" y2="130" stroke="#1e40af" stroke-width="1.8" marker-end="url(#a48f)"/>
+  <line x1="496" y1="173" x2="544" y2="148" stroke="#10b981" stroke-width="1.8" marker-end="url(#a48f)"/>
+  <rect x="544" y="100" width="160" height="80" rx="10" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+  <text x="624" y="135" text-anchor="middle" fill="#1e3a6e" font-size="14" font-weight="bold" font-family="sans-serif">Discriminator</text>
+  <text x="624" y="153" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">本物か偽物かを判定</text>
+  <!-- judgment -->
+  <line x1="704" y1="140" x2="744" y2="140" stroke="#1e40af" stroke-width="2" marker-end="url(#a48f)"/>
+  <rect x="744" y="118" width="100" height="44" rx="8" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5"/>
+  <text x="794" y="138" text-anchor="middle" fill="#1e3a6e" font-size="12" font-weight="bold" font-family="sans-serif">真 / 偽</text>
+  <text x="794" y="154" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">判定結果</text>
+  <!-- feedback arrows -->
+  <path d="M794,118 Q794,48 248,48 Q248,63 248,65" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#a48r)"/>
+  <text x="520" y="36" text-anchor="middle" fill="#dc2626" font-size="11" font-family="sans-serif">Generator への誤差フィードバック（だませるように改善）</text>
+  <text x="450" y="200" text-anchor="middle" fill="#4b5563" font-size="12" font-family="sans-serif">二者の競争が続くほど、Generatorの出力は本物に近づいていく</text>
+</svg>
+</div>
+<h2>4. なぜ競争でうまくいくのか</h2>
+<p>Generator だけを単独で学習させると、「何が良い生成か」という評価基準を与える必要がある。GAN ではこの評価基準を Discriminator が担う。Discriminator がだまされるほど、Generator の出力は本物らしくなっていると考えられる。</p>
+<p>つまり GAN は、<strong>評価関数を固定的に与える代わりに、学習の中で評価者自体も成長させる</strong>構造を持つ。このため、人手で明示しにくい「本物らしさ」を学習させやすい。</p>
+<div class="note">
+<p><strong>押さえ方：</strong> GAN の核心は「競争そのもの」ではなく、「本物らしさの評価を対戦相手に担わせる」ところにある。</p>
+</div>
+
+<h2>5. ミニマックスの考え方</h2>
+<p>GAN の学習は、しばしば <strong>minimax</strong> の形で説明される。Discriminator は本物と偽物を正しく見分けたいので識別精度を上げたい。一方 Generator は Discriminator の識別を崩したいので、偽物を本物に近づける方向へ動く。</p>
+<p>この相反する目的を持つ二者が交互に更新されることで、理想的には「Discriminator が簡単には見分けられないほど本物らしいサンプル」を Generator が作れるようになる。</p>
+
+<h2>6. GAN の長所</h2>
+<p>GAN は特に画像生成で高品質な結果を出し、一時代を築いた。VAE よりもシャープで見た目のよい画像が得られやすいことが多く、画像変換、顔生成、超解像などにも広く使われた。</p>
+<p>また、条件付き GAN のようにラベルや条件を与えることで、指定した属性に沿った生成を行う拡張も発展した。</p>
+
+<h2>7. GAN の難しさ</h2>
+<p>一方で、GAN の学習は不安定になりやすい。Generator が単調なパターンしか出さなくなる <strong>mode collapse</strong>、Discriminator が強すぎて勾配がうまく流れない問題、ハイパーパラメータ調整の難しさなどがある。</p>
+<p>つまり GAN は「きれいな出力が出る」ことで有名だが、「安定して訓練しやすい」モデルとは限らない。この点で VAE や後の拡散モデルと対比されることが多い。</p>
+<div class="warn">
+<p><strong>混同注意：</strong> GAN は「二つのモデルを足しただけ」ではない。対立的目的を持つ二者を同時に学習する点が本質であり、そこが強みでもあり難しさでもある。</p>
+</div>
+
+<h2>8. VAE・拡散モデルとの違い</h2>
+<table>
+<thead><tr><th>観点</th><th>VAE</th><th>GAN</th><th>拡散モデル</th></tr></thead>
+<tbody>
+<tr><td>生成の考え方</td><td>確率的潜在空間</td><td>対立的学習</td><td>ノイズ除去過程</td></tr>
+<tr><td>学習安定性</td><td>比較的高い</td><td>不安定になりやすい</td><td>比較的安定しやすい</td></tr>
+<tr><td>出力の見た目</td><td>やや滑らか</td><td>シャープになりやすい</td><td>高品質で制御性も高い</td></tr>
+</tbody>
+</table>
+
+<h2>9. 応用例</h2>
+<p>GAN は画像生成、画像変換、データ拡張、超解像、欠損補完など多様な用途で使われてきた。たとえば「昼の風景を夜景へ変える」「低解像画像を高解像化する」など、見た目の自然さが重要な応用と相性がよい。</p>
+<p>ただし近年では、安定性や品質の面から拡散モデルが主流になった領域も多い。したがって、GAN は現在でも重要だが、「唯一の代表」ではなく「生成モデル史の重要な段階」として位置づけるのが適切である。</p>
+
+<h2>10. 試験ポイント</h2>
+<ul>
+  <li>GAN は <strong>Generator と Discriminator の競争で学習する生成モデル</strong> である。</li>
+  <li>Generator は偽物を作り、Discriminator は真偽を判定する。</li>
+  <li>本物らしさの評価を対立構造で学習する点が本質である。</li>
+  <li>高品質生成が強みだが、学習不安定や mode collapse が弱点である。</li>
+  <li>VAE や拡散モデルとは生成原理が異なる。</li>
+</ul>
+
+<h2>11. 人に説明するなら</h2>
+<div class="section-box">
+<p>GAN とは、データを作るモデルと、それが本物か見抜くモデルを競わせることで、生成品質を高めていく仕組みである。生成器は識別器をだませるように学び、識別器はだまされないように学ぶ。その対立が、画像生成などで高品質な結果を生んできた。</p>
+</div>
+
+<h2>12. 次回への橋渡し</h2>
+<p>GAN は対立学習で高品質生成を実現したが、学習の不安定さという課題もある。次は拡散モデルを取り上げ、<strong>ノイズを少しずつ除去していく</strong> という、また別の生成発想を見る。</p>
+<p class="small">次ユニット：G-U049「拡散モデル ― ノイズから戻す発想」</p>
+
+<div class="unit-nav"><a href="g_u047.html">← G-U047</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u049.html">G-U049 →</a></div>
+</div></article></div>
+</body>
+</html>

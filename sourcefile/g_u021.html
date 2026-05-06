@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U021：活性化関数 ― 線形では足りない理由</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U021：活性化関数 ― 線形では足りない理由</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+
+<div class="lead">
+<p>前回は、順伝播によって入力が各層を通りながら出力へ変換される流れを見た。今回は、その各層の計算に「ただの足し算・掛け算以上の表現力」を与える <strong>活性化関数</strong> を扱う。</p>
+<p>このユニットの核心は、<strong>活性化関数はニューラルネットの飾りではなく、深いモデルに意味を与える中核部品である</strong>、という理解である。ここを押さえると、「なぜ層を重ねるだけではだめで、なぜ非線形性が必要なのか」を他人にも説明しやすくなる。</p>
+</div>
+
+<h2>1. 今回の位置づけ</h2>
+<p>U016〜U020で、現代AIを支える計算資源、ニューラルネットの基本部品、順伝播までを見てきた。そこまでの理解だけだと、ニューラルネットは「重み付き和を何回か計算する仕組み」に見える。しかし、それだけでは深層学習の強みは十分に説明できない。</p>
+<p>そこで登場するのが活性化関数である。活性化関数は、各層の線形変換の後に非線形な変換を加えることで、ネットワーク全体が複雑な関係を表現できるようにする。言い換えると、<strong>深さが表現力へ変わるための接着剤</strong>のような役割を持つ。</p>
+
+<h2>2. 結論</h2>
+<div class="section-box">
+<p>活性化関数とは、<strong>各層の線形変換のあとに非線形性を与える関数</strong>である。これがないと、層を何枚重ねても全体としては単純な線形変換に近い表現に潰れてしまいやすい。</p>
+<p>したがって、活性化関数の本質は「出力値を0か1にすること」ではなく、<strong>線形変換の積み重ねでは表せない複雑さをモデルに持たせること</strong>にある。</p>
+</div>
+
+<h2>3. なぜ線形だけでは足りないのか</h2>
+<p>ここで重要なのは、線形変換を何回重ねても、全体としては一つの線形変換へまとめられてしまう、という事実である。たとえば、行列 <code>W1</code> と <code>W2</code> による二回の変換を続けて行っても、結果は <code>W2W1</code> という一つの行列で表せる。つまり、線形変換だけなら「層が深いこと」自体に大きな意味は生まれにくい。</p>
+<p>現実の問題は、多くが単純な直線や平面では分けられない。画像認識では、明るさ・輪郭・質感・局所パターンが複雑に絡み合う。需要予測でも、価格、季節、キャンペーン、顧客属性が素直な一次関係では結び付かない。こうした複雑な関係を扱うには、モデル側にも「曲がる」「折れる」「飽和する」といった非線形な性質が必要になる。</p>
+<div class="note">
+<p><strong>試験での押さえ方：</strong>「多層にしただけでは線形のままでは弱い。活性化関数で非線形性を入れるから表現力が増す」と一文で言えるようにしておく。</p>
+</div>
+
+<div class="section-box">
+<p><strong>図で見る：</strong>線形変換だけでは表現できないパターン</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 230" style="width:100%;height:auto;display:block;">
+  
+  <rect x="20" y="30" width="390" height="170" rx="8" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1.5" />
+  <text x="215" y="52" text-anchor="middle" fill="#dc2626" font-size="13" font-weight="bold" font-family="sans-serif">活性化関数なし（線形のみ）</text>
+  
+  <circle cx="80" cy="90" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="110" cy="120" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="90" cy="150" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="130" cy="80" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="270" cy="90" r="8" fill="#f97316" opacity=".8" />
+  <circle cx="300" cy="130" r="8" fill="#f97316" opacity=".8" />
+  <circle cx="330" cy="100" r="8" fill="#f97316" opacity=".8" />
+  <circle cx="310" cy="160" r="8" fill="#f97316" opacity=".8" />
+  
+  <line x1="195" y1="60" x2="205" y2="190" stroke="#374151" stroke-width="2" stroke-dasharray="6,3" />
+  <text x="215" y="195" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">直線的な境界しか引けない</text>
+
+  
+  <rect x="490" y="30" width="390" height="170" rx="8" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1.5" />
+  <text x="685" y="52" text-anchor="middle" fill="#111827" font-size="13" font-weight="bold" font-family="sans-serif">活性化関数あり（非線形）</text>
+  
+  <circle cx="560" cy="85" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="600" cy="155" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="770" cy="90" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="810" cy="155" r="8" fill="#1e40af" opacity=".8" />
+  <circle cx="560" cy="155" r="8" fill="#f97316" opacity=".8" />
+  <circle cx="600" cy="85" r="8" fill="#f97316" opacity=".8" />
+  <circle cx="770" cy="155" r="8" fill="#f97316" opacity=".8" />
+  <circle cx="810" cy="85" r="8" fill="#f97316" opacity=".8" />
+  
+  <path d="M510,120 Q620,60 685,120 Q750,180 870,120" fill="none" stroke="#374151" stroke-width="2" stroke-dasharray="6,3" />
+  <text x="685" y="195" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">曲線的・複雑な境界も表現可能</text>
+  
+  <text x="450" y="220" text-anchor="middle" fill="#1e40af" font-size="12" font-family="sans-serif">活性化関数がなければ、何層重ねても線形変換と同等になってしまう</text>
+</svg>
+</div>
+<h2>4. 活性化関数の役割</h2>
+<p>活性化関数は、各ニューロンの出力に対して「どの程度反応させるか」を決める関数として導入されることが多い。ただし、G検定で重要なのは生物の神経細胞の比喩よりも、<strong>数学的には非線形変換を挿入している</strong>という理解である。</p>
+<p>これにより、モデルは単純な閾値判定だけでなく、入力空間を折り曲げたり、局所的に感度を変えたりしながら表現を作れるようになる。深層学習で「中間層が特徴を学ぶ」と言うとき、その背後では、線形変換と活性化関数の組み合わせが段階的に表現を変換している。</p>
+<table>
+<thead><tr><th>観点</th><th>活性化関数がない場合</th><th>活性化関数がある場合</th></tr></thead>
+<tbody>
+<tr><td>層を重ねる意味</td><td>限定的。全体が線形変換へまとめられやすい</td><td>非線形変換の積み重ねとして意味を持つ</td></tr>
+<tr><td>表現力</td><td>単純な関係に偏りやすい</td><td>複雑な境界や特徴を表現しやすい</td></tr>
+<tr><td>実務での使い道</td><td>限定的</td><td>画像・音声・言語など広範な問題に対応しやすい</td></tr>
+</tbody>
+</table>
+
+<div class="section-box"><p><strong>図で見る：</strong>代表的な活性化関数の形状と特性比較</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 270" style="width:100%;height:auto;display:block;">
+<defs><style>
+.ax{stroke:#9ca3af;stroke-width:1.2;}
+.fn{stroke-width:2.5;fill:none;}
+.lab{font-weight:700;font-size:12px;font-family:sans-serif;text-anchor:middle;}
+.sub{font-size:10px;font-family:sans-serif;text-anchor:middle;fill:#4b5563;}
+.tick{stroke:#d1d5db;stroke-width:1;}
+</style></defs>
+
+
+
+
+
+<text x="102" y="18" class="lab" fill="#1e40af">Sigmoid</text>
+<text x="102" y="30" class="sub">出力: 0〜1</text>
+
+<line x1="12" y1="100" x2="192" y2="100" class="ax" />
+<line x1="102" y1="38" x2="102" y2="162" class="ax" />
+
+<text x="105" y="52" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">1</text>
+<text x="105" y="102" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">0</text>
+<text x="105" y="158" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">−1</text>
+
+<polyline class="fn" stroke="#1e40af" points=" 12,148 22,147 32,145 42,141 52,135 62,125 72,113 82,103 92,97 102,100 112,103 122,107 132,113 142,120 152,127 162,133 172,138 182,142 192,145" />
+
+<polyline class="fn" stroke="#1e40af" points="12,147 42,140 72,124 102,100 132,76 162,60 192,53" />
+
+
+<text x="327" y="18" class="lab" fill="#111827">Tanh</text>
+<text x="327" y="30" class="sub">出力: −1〜1</text>
+<line x1="237" y1="100" x2="417" y2="100" class="ax" />
+<line x1="327" y1="38" x2="327" y2="162" class="ax" />
+<text x="330" y="52" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">1</text>
+<text x="330" y="102" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">0</text>
+<text x="330" y="158" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">−1</text>
+
+<polyline class="fn" stroke="#059669" points="237,152 267,150 297,140 327,100 357,60 387,50 417,48" />
+
+
+<text x="552" y="18" class="lab" fill="#111827">ReLU</text>
+<text x="552" y="30" class="sub">出力: 0 or x (x&gt;0)</text>
+<line x1="462" y1="100" x2="642" y2="100" class="ax" />
+<line x1="552" y1="38" x2="552" y2="162" class="ax" />
+<text x="555" y="52" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">3</text>
+<text x="555" y="102" style="font-size:9px;fill:#FFFFFF;font-family:sans-serif;">0</text>
+
+<polyline class="fn" stroke="#f97316" points="462,100 552,100 642,40" />
+
+<circle cx="552" cy="100" r="3" fill="#f97316" />
+
+
+<text x="777" y="18" class="lab" fill="#7c3aed">Leaky ReLU</text>
+<text x="777" y="30" class="sub">負でも微小な勾配</text>
+<line x1="687" y1="100" x2="867" y2="100" class="ax" />
+<line x1="777" y1="38" x2="777" y2="162" class="ax" />
+<text x="780" y="52" style="font-size:9px;fill:#6b7280;font-family:sans-serif;">3</text>
+<text x="780" y="102" style="font-size:9px;fill:#FFFFFF;font-family:sans-serif;">0</text>
+
+<polyline class="fn" stroke="#7c3aed" points="687,106 777,100 867,40" />
+<circle cx="777" cy="100" r="3" fill="#7c3aed" />
+
+<text x="720" y="108" style="font-size:9px;fill:#7c3aed;font-family:sans-serif;">slope=0.1</text>
+
+
+<text x="102" y="195" class="sub">勾配消失しやすい</text>
+<text x="327" y="195" class="sub">出力が±対称</text>
+<text x="552" y="195" class="sub">勾配消失を軽減・計算が速い</text>
+<text x="777" y="195" class="sub">Dead ReLU問題を軽減</text>
+
+
+<text x="102" y="175" class="sub">x</text>
+<text x="327" y="175" class="sub">x</text>
+<text x="552" y="175" class="sub">x</text>
+<text x="777" y="175" class="sub">x</text>
+
+
+<line x1="12" y1="100" x2="192" y2="100" stroke="#dbeafe" stroke-width="1" stroke-dasharray="3,3" />
+<line x1="237" y1="100" x2="417" y2="100" stroke="#dbeafe" stroke-width="1" stroke-dasharray="3,3" />
+
+
+<text x="450" y="230" style="fill:#4b5563;font-size:11px;font-family:sans-serif;text-anchor:middle;">出力層には Sigmoid（2値分類）または Softmax（多値分類）を使う</text>
+<text x="450" y="248" style="fill:#4b5563;font-size:11px;font-family:sans-serif;text-anchor:middle;">隠れ層では ReLU系が主流（Sigmoid/Tanhは勾配消失を引き起こしやすい）</text>
+</svg></div>
+<h2>5. 代表的な活性化関数</h2>
+<p>G検定でまず押さえるべき代表例は、<strong>sigmoid</strong>、<strong>tanh</strong>、<strong>ReLU</strong>、そして出力層で用いる <strong>softmax</strong> である。softmax は厳密には活性化関数というより出力変換として理解した方が整理しやすいが、試験では同じ文脈で出ることが多い。</p>
+
+<h3>sigmoid</h3>
+<p>sigmoid は出力を 0〜1 の範囲へ滑らかに押し込む関数である。確率らしい値を出しやすいため、二値分類の出力層でよく使われる。一方で、入力が大きくなると勾配が小さくなりやすく、深い層の中間で多用すると学習しにくくなる問題がある。</p>
+
+<h3>tanh</h3>
+<p>tanh は出力が -1〜1 に収まる。平均が0付近になりやすいので sigmoid より扱いやすい場面もあるが、やはり飽和領域では勾配が小さくなる。</p>
+
+<h3>ReLU</h3>
+<p>ReLU は、入力が正ならそのまま出し、負なら0にする単純な関数である。計算が軽く、深いネットワークでも扱いやすいため、中間層の標準的選択肢として広く使われてきた。G検定では「中間層には ReLU 系がよく使われる」という理解が重要である。</p>
+
+<h3>softmax</h3>
+<p>softmax は複数クラス分類の出力層で使われ、各クラスのスコアを合計1になるような確率分布へ変換する。したがって、単一ラベル多クラス分類で「どのクラスか」を出すときと相性がよい。</p>
+
+<h2>6. sigmoid と ReLU の見方</h2>
+<p>sigmoid と ReLU は、単に「新旧の活性化関数」という対比ではなく、<strong>どこに使うかが違う</strong>と整理すると分かりやすい。sigmoid は値を0〜1へ押し込むので、二値の確率的解釈に向く。一方 ReLU は、表現の途中で情報を処理する中間層に向く。</p>
+<p>よくある誤解は、「ReLU は常に sigmoid より優れている」というものだが、これは不正確である。中間層では ReLU が使いやすいことが多いものの、出力の意味づけまで含めると sigmoid が適切な場面もはっきり存在する。</p>
+<div class="warn">
+<p><strong>混同注意：</strong>「活性化関数の優劣」を丸暗記しない。問題設定、層の役割、出力の意味に応じて使い分ける。</p>
+</div>
+
+<h2>7. 出力層での使い分け</h2>
+<p>活性化関数は中間層だけでなく、出力層でも重要である。むしろ出力層では「その値をどう解釈したいか」が直結する。</p>
+<ul>
+  <li><strong>回帰：</strong>数量そのものを出したいので、線形出力のままにすることが多い。</li>
+  <li><strong>二値分類：</strong>0〜1 の確率に解釈しやすい sigmoid が使われやすい。</li>
+  <li><strong>多クラス分類：</strong>クラス確率へ変換する softmax が使われやすい。</li>
+  <li><strong>多ラベル分類：</strong>各ラベルが独立に成り立つので、各出力に sigmoid を適用する形が典型である。</li>
+</ul>
+<p>この対応は損失関数とも強く結び付く。たとえば softmax は交差エントロピー損失と組で語られることが多い。したがって、活性化関数は単独で覚えるより、<strong>出力層の意味・損失関数・タスク種類</strong>の三点セットで押さえるのがよい。</p>
+
+<h2>8. 他概念との関係</h2>
+<p>活性化関数を理解すると、後続のユニットがつながって見える。損失関数は「何を減らしたいか」を決め、勾配降下法は「どう減らすか」を決め、誤差逆伝播法は「各層へどのように責任を配るか」を決める。活性化関数はその途中で、<strong>そもそもどのような表現が可能か</strong>を決めている。</p>
+<p>また、活性化関数の選び方は勾配消失問題とも関係する。sigmoid や tanh は飽和領域で勾配が小さくなりやすく、深層学習ではこれが学習の難しさにつながった。ReLU 系の普及は、こうした問題をある程度緩和した歴史とも結び付く。</p>
+
+<h2>9. 実務との接点</h2>
+<p>実務でモデルを一から設計しない場面でも、活性化関数の基本理解は有用である。論文やOSS実装を読むとき、「中間層に何を使っているか」「出力層は何か」「その理由は何か」が分かるだけで、モデル理解の解像度が一段上がる。</p>
+<p>また、現場説明でも「AIが複雑な関係を扱えるのは、重みだけでなく活性化関数で非線形性を入れているからだ」と言えると、ブラックボックス扱いから一歩進んだ説明になる。</p>
+
+<h2>10. 試験ポイント</h2>
+<ul>
+  <li>活性化関数の本質は <strong>非線形性の付与</strong> である。</li>
+  <li>線形変換だけを重ねても表現力は限定される。</li>
+  <li>中間層では ReLU 系、二値分類の出力では sigmoid、多クラス分類の出力では softmax、という代表対応を押さえる。</li>
+  <li>活性化関数は損失関数や出力解釈と結び付いている。</li>
+</ul>
+
+<h2>11. 人に説明するなら</h2>
+<div class="section-box">
+<p>活性化関数とは、ニューラルネットに非線形性を与える関数である。これがあることで、層を重ねる意味が生まれ、単純な直線では表せない複雑な関係を学習できる。中間層では ReLU 系、出力層ではタスクに応じて sigmoid や softmax などを使い分ける。</p>
+</div>
+
+<h2>12. 次回への橋渡し</h2>
+<p>ここまでで、モデルが複雑な関係を表現できる理由は見えてきた。次は、そのモデルが出した予測が「どれだけ悪いか」を何で測るのか、つまり <strong>損失関数</strong> を扱う。活性化関数が表現力を決めるなら、損失関数は学習の方向そのものを決める。</p>
+<p class="small">次ユニット：G-U022「損失関数 ― 何を減らしたいのか」</p>
+
+<div class="unit-nav"><a href="g_u020.html">← G-U020</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u022.html">G-U022 →</a></div>
+</div></article></div>
+</body>
+</html>

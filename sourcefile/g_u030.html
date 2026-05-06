@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U030：最適化手法の違い ― SGDからAdamまで</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U030：最適化手法の違い ― SGDからAdamまで</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+
+<div class="lead">
+<p>前回は Batch Normalization を通じて、層ごとの分布を整えることで学習を安定化させる発想を見た。今回は、それでもなお中心にある「パラメータをどう更新するか」という問題に立ち戻り、<strong>最適化手法の違い</strong>を整理する。</p>
+<p>SGD、Momentum、AdaGrad、RMSProp、Adam などは、すべて勾配を使って更新する点では同じだが、<strong>過去の勾配をどう使うか、各パラメータの歩幅をどう調整するか</strong>が異なる。G検定では、この違いを名前暗記ではなく発想として押さえるのが重要である。</p>
+</div>
+
+
+<h2>1. 今回の位置づけ</h2>
+<p>U023 で勾配降下法そのものを学び、U025 で学習率、U026〜U029 で学習を支える各種工夫を見てきた。ここでは、それらを総合する形で「実際にどの更新則を使うか」という視点を導入する。</p>
+<p>最適化手法は、損失関数の地形が複雑でノイズも大きい深層学習において、<strong>単純な一歩ずつの下り方を賢くする工夫</strong>だと言える。</p>
+
+<h2>2. 結論</h2>
+<div class="section-box">
+<p>最適化手法の違いは、<strong>勾配の履歴や大きさをどう利用して更新量を決めるか</strong>の違いである。SGD は最も素朴で、Momentum は慣性を持たせ、AdaGrad は各パラメータごとに学習率を調整し、RMSProp はその極端さを和らげ、Adam は慣性と適応的学習率を組み合わせる。</p>
+<p>どれか一つが常に絶対優位というより、<strong>学習の安定性、収束速度、問題との相性</strong>で使い分ける対象である。</p>
+</div>
+
+<div class="section-box"><p><strong>図で見る：</strong>SGD・Momentum・Adamの損失曲面上での更新経路の違い（概念図）</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 310" style="width:100%;height:auto;display:block;">
+<defs><style>
+.ttl{fill:#1e3a6e;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;}
+.sub{fill:#4b5563;font-size:11px;font-family:sans-serif;text-anchor:middle;}
+.ax{stroke:#9ca3af;stroke-width:1.}
+.lab{font-size:11px;font-family:sans-serif;text-anchor:middle;}
+</style></defs>
+
+
+<rect x="10" y="10" width="880" height="270" rx="10" fill="#f8fafc" />
+<text x="450" y="30" class="ttl">損失曲面上での各手法の収束経路（概念図）</text>
+
+
+
+<text x="155" y="52" class="ttl" style="font-size:12px;">SGD（確率的勾配降下法）</text>
+
+<ellipse cx="155" cy="175" rx="95" ry="65" fill="none" stroke="#bfdbfe" stroke-width="1.5" />
+<ellipse cx="155" cy="175" rx="70" ry="48" fill="none" stroke="#93c5fd" stroke-width="1.5" />
+<ellipse cx="155" cy="175" rx="45" ry="30" fill="none" stroke="#60a5fa" stroke-width="1.5" />
+<ellipse cx="155" cy="175" rx="20" ry="13" fill="none" stroke="#3b82f6" stroke-width="2" />
+
+<circle cx="155" cy="175" r="5" fill="#1e40af" />
+
+<circle cx="230" cy="115" r="5" fill="#dc2626" />
+
+<polyline points="230,115 200,130 218,145 192,158 210,170 188,175 165,175 155,175" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="none" />
+<text x="155" y="258" class="sub" fill="#dc2626">ジグザグに進む・振動しやすい</text>
+
+
+<text x="455" y="52" class="ttl" style="font-size:12px;">Momentum</text>
+<ellipse cx="455" cy="175" rx="95" ry="65" fill="none" stroke="#bfdbfe" stroke-width="1.5" />
+<ellipse cx="455" cy="175" rx="70" ry="48" fill="none" stroke="#93c5fd" stroke-width="1.5" />
+<ellipse cx="455" cy="175" rx="45" ry="30" fill="none" stroke="#60a5fa" stroke-width="1.5" />
+<ellipse cx="455" cy="175" rx="20" ry="13" fill="none" stroke="#3b82f6" stroke-width="2" />
+<circle cx="455" cy="175" r="5" fill="#1e40af" />
+<circle cx="530" cy="115" r="5" fill="#f97316" />
+
+<path d="M530,115 Q510,130 495,145 Q480,158 475,168 Q468,174 455,175" fill="none" stroke="#f97316" stroke-width="2.5" />
+<text x="455" y="258" class="sub" fill="#111827">慣性で振動が減り・収束が速い</text>
+
+
+<text x="755" y="52" class="ttl" style="font-size:12px;">Adam</text>
+<ellipse cx="755" cy="175" rx="95" ry="65" fill="none" stroke="#bfdbfe" stroke-width="1.5" />
+<ellipse cx="755" cy="175" rx="70" ry="48" fill="none" stroke="#93c5fd" stroke-width="1.5" />
+<ellipse cx="755" cy="175" rx="45" ry="30" fill="none" stroke="#60a5fa" stroke-width="1.5" />
+<ellipse cx="755" cy="175" rx="20" ry="13" fill="none" stroke="#3b82f6" stroke-width="2" />
+<circle cx="755" cy="175" r="5" fill="#1e40af" />
+<circle cx="830" cy="115" r="5" fill="#059669" />
+
+<path d="M830,115 Q810,135 795,155 Q780,168 770,173 Q762,176 755,175" fill="none" stroke="#059669" stroke-width="2.5" />
+<text x="755" y="258" class="sub" fill="#111827">学習率を自動調整・最も安定して収束</text>
+
+
+<text x="450" y="295" class="sub">●=最小点　●=開始点　モメンタムは過去の勾配を蓄積してステップを滑らかにする</text>
+</svg></div>
+<h2>3. SGDとは何か</h2>
+<p><strong>SGD（Stochastic Gradient Descent）</strong> は、ミニバッチごとに計算した勾配を使ってパラメータを更新する、最も基本的な方法である。ここで stochastic とは、データ全体ではなくサンプルやミニバッチ単位で近似的な勾配を使うことに由来する。</p>
+<p>SGD の長所は単純で実装しやすいことだが、短所として、勾配方向が毎回ばらつきやすく、谷の斜面をジグザグに進むような挙動をしやすい。そのため、収束が遅かったり不安定に見えたりすることがある。</p>
+
+<h2>4. Momentum</h2>
+<p>Momentum は、現在の勾配だけでなく、過去の更新方向も少し残しながら進む方法である。物理でいう慣性の比喩が使われ、同じ方向へ勾配が続くと加速し、細かな振動を抑えやすい。</p>
+<p>これにより、SGD よりも滑らかに進みやすく、谷筋に沿って進む効率が改善される。G検定では「過去の更新を蓄えて慣性を持たせる」と覚えるとよい。</p>
+
+<h2>5. AdaGrad</h2>
+<p>AdaGrad は、各パラメータについて過去の勾配の大きさを蓄積し、よく更新されるパラメータほど学習率を小さくする。これにより、まれにしか更新されない特徴にも比較的しっかり反応できる。</p>
+<p>一方で、勾配を蓄積し続けるため、学習が進むほど学習率がどんどん小さくなりすぎる問題がある。これが後続手法の発展につながった。</p>
+
+<h2>6. RMSProp</h2>
+<p>RMSProp は、AdaGrad の「学習率が縮みすぎる」問題を和らげるため、過去の勾配を単純累積ではなく指数移動平均で扱う。これにより、古すぎる情報に引きずられにくくなり、適応的学習率の利点を保ちつつ実用性を高めている。</p>
+<p>要するに RMSProp は、<strong>AdaGrad をより現実的にした手法</strong>と捉えると理解しやすい。</p>
+
+<h2>7. Adam</h2>
+<p>Adam は、Momentum 的な一次モーメントの考え方と、RMSProp 的な二次モーメントの考え方を組み合わせた手法である。勾配の移動平均と、勾配二乗の移動平均の両方を使い、更新方向と歩幅を同時に調整する。</p>
+<p>そのため、実務ではまず試す最適化手法としてよく使われる。だが、これも万能ではなく、場合によっては SGD + Momentum の方が最終性能で有利なこともある。したがって、<strong>Adam は便利だが常に正解ではない</strong>という理解が大切である。</p>
+<table>
+<thead><tr><th>手法</th><th>基本発想</th><th>直感的理解</th></tr></thead>
+<tbody>
+<tr><td>SGD</td><td>現在の勾配で更新</td><td>最も素朴な一歩ずつの下り方</td></tr>
+<tr><td>Momentum</td><td>過去の更新方向を残す</td><td>慣性をつけて進む</td></tr>
+<tr><td>AdaGrad</td><td>各パラメータごとに学習率調整</td><td>よく動くところは慎重に、まれなところは大きめに</td></tr>
+<tr><td>RMSProp</td><td>AdaGradの累積を移動平均化</td><td>縮みすぎを防いだ適応更新</td></tr>
+<tr><td>Adam</td><td>Momentum + RMSProp 的発想</td><td>方向と歩幅を両方賢く決める</td></tr>
+</tbody>
+</table>
+
+<h2>8. 最適化手法と学習率</h2>
+<p>最適化手法が変わっても学習率は依然として重要である。Adam は学習率に頑健だと言われることがあるが、まったく調整不要ではない。また SGD 系は学習率スケジュールと組み合わせて性能を引き出すことが多い。</p>
+<p>つまり、最適化手法は学習率を不要にするものではなく、<strong>学習率の使い方を変える</strong>ものだと考えるとよい。</p>
+
+<h2>9. 実務との接点</h2>
+<p>実務での第一選択は問題やライブラリ文化によって異なる。深層学習の試作では Adam が便利なことが多いが、大規模学習や画像分類では SGD + Momentum が強いこともある。重要なのは、最適化手法を「理論の名前」ではなく、<strong>収束速度・安定性・最終性能のトレードオフを調整する手段</strong>として捉えることだ。</p>
+<p>また、BN や初期値設定と組み合わせたときの挙動も変わるため、最適化手法単独で考えすぎない方がよい。</p>
+
+<h2>10. 他概念との関係</h2>
+<p>ここまで見てきた活性化関数、損失関数、逆伝播、学習率、初期値、正則化、Dropout、BN は、すべて最終的には「勾配に基づいてどう更新するか」という場面へ集約される。最適化手法は、その更新の仕方を賢くする中心技術である。</p>
+<p>このユニットを押さえると、深層学習が単なるブラックボックスではなく、複数の設計要素を組み合わせて訓練されるシステムだと見えてくる。</p>
+
+<h2>11. 試験ポイント</h2>
+<ul>
+  <li>SGD は最も基本的な確率的勾配降下法である。</li>
+  <li>Momentum は慣性を導入し、ジグザグを抑えやすい。</li>
+  <li>AdaGrad はパラメータごとに適応的学習率を使うが、縮みすぎやすい。</li>
+  <li>RMSProp は AdaGrad の問題を和らげる。</li>
+  <li>Adam は Momentum と RMSProp 的発想を組み合わせる。</li>
+</ul>
+
+<h2>12. 人に説明するなら</h2>
+<div class="section-box">
+<p>最適化手法の違いとは、勾配を見てどのように一歩を踏み出すかの違いである。SGD は単純、Momentum は慣性つき、AdaGrad と RMSProp は歩幅を自動調整し、Adam はそれらを組み合わせている。どれも同じ目的だが、進み方の賢さが違う。</p>
+</div>
+
+<h2>13. 次回への橋渡し</h2>
+<p>ここまでで、ニューラルネットの学習を支える基本部品と安定化手法を一通り見てきた。次のブロックでは、これらの基礎の上に立って、CNN や RNN など<strong>具体的なアーキテクチャ</strong>へ進んでいく準備が整う。</p>
+<p class="small">次ユニット：G-U026-030_cap「G検定対策サマリー（U026〜U030）」</p>
+
+
+<div class="unit-nav"><a href="g_u029.html">← G-U029</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="G-U026-030_cap.html">G-U026-030_cap →</a></div>
+</div></article></div>
+</body>
+</html>

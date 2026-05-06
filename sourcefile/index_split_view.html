@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G検定教材ビューア</title>
+<style>
+
+:root{
+  --bg:#f0f4f9;
+  --panel:#ffffff;
+  --text:#1f2937;
+  --sub:#4b5563;
+  --line:#d1d5db;
+  --accent:#1e40af;
+  --accent-soft:#dbeafe;
+  --hover:#f3f4f6;
+}
+*{box-sizing:border-box;}
+html,body{height:100%; margin:0;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+a{color:inherit;}
+
+.shell{display:grid; grid-template-columns:340px 1fr; height:100vh; gap:16px; padding:16px;}
+.left{min-width:0;}
+.right{min-width:0; display:grid; grid-template-rows:auto 1fr; gap:12px;}
+.panel{background:var(--panel); border:1px solid #e5e7eb; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.toolbar{padding:14px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px;}
+.title-wrap{min-width:0;}
+.badge{display:inline-block; background:var(--accent-soft); color:var(--accent); border:1px solid var(--line); border-radius:999px; padding:5px 10px; font-size:12px; font-weight:700; letter-spacing:.04em;}
+h1{font-size:20px; margin:8px 0 4px; line-height:1.35;}
+.sub{margin:0; color:var(--sub); font-size:13px;}
+.actions{display:flex; gap:8px; flex-wrap:wrap;}
+.btn{text-decoration:none; color:var(--text); background:#fff; border:1px solid #d1d5db; border-radius:10px; padding:9px 12px; font-size:13px;}
+.btn:hover{background:var(--hover);}
+.frame-wrap{overflow:hidden;}
+iframe{width:100%; height:100%; border:0; border-radius:14px; background:white;}
+@media (max-width: 960px) {
+  .shell{grid-template-columns:1fr; grid-template-rows:42vh 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="left panel frame-wrap">
+    <iframe id="navFrame" name="nav_frame" src="index_leftpane.html" title="教材ナビ"></iframe>
+  </div>
+  <div class="right">
+    <div class="panel toolbar">
+      <div class="title-wrap">
+        <span class="badge">追加ビュー</span>
+        <h1 id="viewerTitle">G検定教材ビューア</h1>
+        <p class="sub" id="viewerSub">左側の一覧から教材を選ぶと、ここに表示されます。</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="index.html" target="_blank" rel="noopener">既存 index を開く</a>
+        <a class="btn" id="openCurrent" href="g_u001.html" target="_blank" rel="noopener">表示中を別タブで開く</a>
+      </div>
+    </div>
+    <div class="panel frame-wrap">
+      <iframe id="contentFrame" name="content_frame" src="g_u001.html" title="教材本文"></iframe>
+    </div>
+  </div>
+</div>
+<script>
+const contentFrame = document.getElementById('contentFrame');
+const openCurrent = document.getElementById('openCurrent');
+const viewerSub = document.getElementById('viewerSub');
+
+function updateMeta(href) {
+  openCurrent.href = href;
+  viewerSub.textContent = `表示中: ${href}`;
+  const nav = document.getElementById('navFrame');
+  try {
+    nav.contentWindow.postMessage({type:'viewer:navigate', href}, '*');
+  } catch (e) {}
+}
+
+contentFrame.addEventListener('load', () => {
+  try {
+    const href = contentFrame.contentWindow.location.pathname.split('/').pop() || "g_u001.html";
+    updateMeta(href);
+  } catch (e) {
+    updateMeta("g_u001.html");
+  }
+});
+
+updateMeta("g_u001.html");
+</script>
+</body>
+</html>

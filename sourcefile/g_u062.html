@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U062：F1-score ― PrecisionとRecallの両立を見る</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U062：F1-score ― PrecisionとRecallの両立を見る</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+<div class="lead"><p>F1-score は Precision と Recall を一つにまとめる代表指標である。ただの式暗記ではなく、なぜ調和平均なのか、どんな場面で有効でどこに限界があるのかまで押さえる。</p></div>
+<h2>1. このユニットの位置づけ</h2>
+<p>前ユニットで見たように、Precision と Recall はしばしばトレードオフになる。そこで登場するのが F1-score である。これは二つの指標を一つにまとめるための代表的な方法であり、G検定でも頻出である。</p>
+<p>ただし、F1-score は「万能の総合指標」ではない。何を平均しているのか、なぜ算術平均ではなく調和平均なのか、どのような局面で有効でどこに限界があるのかまで理解しておく必要がある。</p>
+<h2>2. F1-score の定義</h2>
+<p>F1-score は Precision と Recall の <strong>調和平均</strong> であり、<code>2PR / (P + R)</code> で表される。ここで <code>P</code> は Precision、<code>R</code> は Recall を表す。</p>
+<p>調和平均が使われる理由は、どちらか片方だけが高い状況を厳しく見るためである。たとえば Precision が高くても Recall が極端に低ければ、実務上は役に立ちにくい。算術平均だと片方の高さが他方の低さを隠しやすいが、調和平均はそのバランスの悪さを反映しやすい。</p>
+<div class="section-box">
+<p><strong>図で見る：</strong>F1-scoreはなぜ調和平均なのか</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 200" style="width:100%;height:auto;display:block;">
+  
+  <rect x="30" y="20" width="260" height="160" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5" />
+  <text x="160" y="44" text-anchor="middle" fill="#15803d" font-size="13" font-weight="bold" font-family="sans-serif">バランス良い場合</text>
+  <rect x="50" y="58" width="100" height="36" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" />
+  <text x="100" y="82" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="sans-serif">P = 0.8</text>
+  <rect x="168" y="58" width="100" height="36" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" />
+  <text x="218" y="82" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="sans-serif">R = 0.8</text>
+  <text x="160" y="122" text-anchor="middle" fill="#374151" font-size="12" font-family="sans-serif">算術平均 = 0.80</text>
+  <text x="160" y="142" text-anchor="middle" fill="#15803d" font-size="14" font-weight="bold" font-family="sans-serif">F1 = 0.80 ✓</text>
+  <text x="160" y="168" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">両指標が高い → F1も高い</text>
+
+  
+  <rect x="320" y="20" width="260" height="160" rx="10" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="450" y="44" text-anchor="middle" fill="#b45309" font-size="13" font-weight="bold" font-family="sans-serif">片方だけ高い場合</text>
+  <rect x="340" y="58" width="100" height="36" rx="6" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" />
+  <text x="390" y="82" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="sans-serif">P = 1.0</text>
+  <rect x="458" y="58" width="100" height="36" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="508" y="82" text-anchor="middle" fill="#111827" font-size="13" font-family="sans-serif">R = 0.1</text>
+  <text x="450" y="122" text-anchor="middle" fill="#374151" font-size="12" font-family="sans-serif">算術平均 = 0.55（高く見える）</text>
+  <text x="450" y="142" text-anchor="middle" fill="#b45309" font-size="14" font-weight="bold" font-family="sans-serif">F1 = 0.18 ← 低い！</text>
+  <text x="450" y="168" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">片寄りを調和平均で正直に表す</text>
+
+  
+  <rect x="610" y="20" width="270" height="160" rx="10" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5" />
+  <text x="745" y="44" text-anchor="middle" fill="#1e40af" font-size="13" font-weight="bold" font-family="sans-serif">調和平均の意味</text>
+  <text x="745" y="70" text-anchor="middle" fill="#1e3a6e" font-size="13" font-family="sans-serif">F1 = 2PR / (P + R)</text>
+  <line x1="630" y1="82" x2="870" y2="82" stroke="#e5e7eb" stroke-width="1" />
+  <text x="745" y="102" text-anchor="middle" fill="#4b5563" font-size="12" font-family="sans-serif">片方が極端に低いと</text>
+  <text x="745" y="120" text-anchor="middle" fill="#4b5563" font-size="12" font-family="sans-serif">全体のスコアを引き下げる</text>
+  <text x="745" y="148" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="bold" font-family="sans-serif">「両立度」を素直に表す</text>
+  <text x="745" y="168" text-anchor="middle" fill="#4b5563" font-size="11" font-family="sans-serif">指標として機能する</text>
+</svg>
+</div>
+<h2>3. なぜ調和平均なのか</h2>
+<p>Precision=1.0, Recall=0.1 の場合を考える。算術平均は 0.55 だが、F1-score は約 0.18 になる。後者の方が「片寄った性能」をより厳しく表している。これは、モデル評価で重要なのが、単なる平均点ではなく <strong>両方をある程度満たしているか</strong> だからである。</p>
+<div class="note"><p>F1-score は「Precision と Recall の両立度合い」を表す。どちらか一方だけを極端に良くしても、高得点になりにくい点が本質である。</p></div>
+<h2>4. どんな場面で使うか</h2>
+<p>F1-score は、陽性が少ない不均衡データや、Precision と Recall の両方が重要な場面で使われやすい。たとえば製造不良検知では、見逃しも困るし誤検出で再検査が増えすぎても困る。そうした局面では、F1-score を一つの代表値として採用しやすい。</p>
+<p>一方で、見逃しのコストが極端に高い医療スクリーニングでは Recall をより重く見るべきことがあるし、営業施策の無駄撃ちが極端に高い場合は Precision をより重く見ることがある。このような場合、F1-score だけで意思決定するのは危険である。</p>
+<h2>5. Fβ-score との関係</h2>
+<p>F1-score は Precision と Recall を同じ重みで扱うが、現実にはどちらかをより重視したいことがある。そのときに使うのが Fβ-score である。<strong>β が大きいほど Recall を重視</strong> し、β が小さいほど Precision を重視する。</p>
+<p>G検定では細かな式変形よりも、「F1 は両者を等重視した代表例」「必要に応じて重みを変える拡張がある」という理解が重要である。つまり指標は一枚岩ではなく、目的に応じて設計するものだということが分かればよい。</p>
+<h2>6. F1-score の限界</h2>
+<p>F1-score は便利だが、真陰性（TN）を直接見ない。そのため、陰性を正しく判定する重要性が高い場面では情報が落ちることがある。また、確率出力の品質やしきい値全体での性能も分からない。これが次の ROC 曲線や PR 曲線、キャリブレーションへつながる理由である。</p>
+<div class="warn"><p>F1-score は「Precision と Recall の要約」であり、モデルの全性能を網羅する指標ではない。要約した分だけ捨てている情報がある。</p></div>
+<h2>7. 混同行列との接続</h2>
+<p>F1-score は混同行列から導かれる指標群の一つである。TP, FP, FN をもとに Precision と Recall を計算し、そこから F1-score が出る。したがって、混同行列を読めないと F1-score の意味も曖昧になる。</p>
+<p>ここで重要なのは、<strong>混同行列 → Precision / Recall → F1-score</strong> という階層で理解することである。後半の指標ほど抽象化されていて便利だが、土台は混同行列にある。</p>
+<h2>8. 実務での使い方</h2>
+<p>モデル選定の初期段階では F1-score を比較軸にしやすい。しかし運用設計では、実際には Precision と Recall を分けて確認するべきである。F1-score が同じでも、Precision 高・Recall 低のモデルと、その逆のモデルでは運用影響が大きく異なるからだ。</p>
+<p>つまり F1-score は <strong>比較のための圧縮指標</strong> として有用だが、現場実装では元の指標に戻って考える必要がある。</p>
+<h2>9. 試験ポイント</h2>
+<ul>
+<li>F1-score は Precision と Recall の調和平均である。</li>
+<li>どちらか一方だけが高い状況を厳しく評価する。</li>
+<li>F1-score は TN を直接見ないため、万能ではない。</li>
+<li>β を変えることで Precision と Recall の重み付けを調整できる。</li>
+</ul>
+<h2>10. 人に説明するなら</h2>
+<div class="section-box"><p>F1-score は、Precision と Recall を一つの数値にまとめた指標である。片方だけ高い状況では高得点になりにくく、「陽性判定の質」と「陽性の拾い切り」の両立度合いを見るのに向いている。</p></div>
+<h2>11. 次回への橋渡し</h2>
+<p>ここまでは、ある一つのしきい値で区切ったときの性能を見てきた。だが、しきい値を変えれば性能はどう動くのか。次は <strong>ROC 曲線と AUC</strong> に進み、しきい値全体でモデルを評価する考え方を扱う。</p>
+<p class="small">次ユニット：G-U063「ROC曲線とAUC ― しきい値全体で見る」</p>
+<div class="unit-nav"><a href="g_u061.html">← G-U061</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u063.html">G-U063 →</a></div>
+</div></article></div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U032：データ拡張 ― データを増やすとは何か</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U032：データ拡張 ― データを増やすとは何か</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+<p class="lead">データ拡張の本質は、件数を見かけ上増やすことではなく、意味を壊さない変換によってモデルに多様な見え方を学ばせることにある。</p>
+
+<h2>1. 今回の位置づけ</h2>
+<p>前回は、学習率やバッチサイズなど、学習条件を人間が調整するハイパーパラメータを見た。今回はその延長線上で、モデルの内部ではなく<strong>訓練データ側を工夫して性能を高める方法</strong>としてデータ拡張を扱う。</p>
+<p>G検定では、データ拡張は画像分野を中心に頻出である。ただし本質は「枚数を物理的に増やすこと」ではない。<strong>タスクの意味を壊さない範囲で見え方の多様性を与え、汎化しやすい学習条件を作ること</strong>が核心である。</p>
+
+<h2>2. 結論</h2>
+<div class="section-box">
+<p>データ拡張（Data Augmentation）とは、既存の訓練データに対して回転、反転、拡大縮小、切り出し、色調変化、ノイズ付加などの変換を加え、<strong>実質的に多様な訓練事例を作る方法</strong>である。</p>
+<p>目的は、単にデータ件数を見かけ上増やすことではなく、モデルに「少し違う見え方でも同じ本質を捉えるべきだ」と学ばせることにある。したがってデータ拡張は、<strong>過学習を抑え、汎化性能を高めるための学習設計</strong>として理解するのが正しい。</p>
+</div>
+
+<h2>3. なぜ必要なのか</h2>
+<p>深層学習は大量データで性能を出しやすいが、現実には十分なラベル付きデータを集められないことが多い。特に業務データや医療画像などでは、取得コストやラベル付けコストが高い。そこで、既存データから意味を保った変換を作り、モデルがより多様な条件に触れられるようにする。</p>
+<p>例えば猫画像を少し回転しても、依然として猫であるなら、その変換後画像を訓練に使うことで「角度が少し違っても猫として認識すべきだ」と学習しやすくなる。これはモデルに<strong>不変性</strong>を学ばせる工夫とも言える。</p>
+
+<h2>4. 代表的な手法</h2>
+<ul>
+  <li><strong>回転</strong>：画像を少し傾ける。撮影角度の違いに強くする。</li>
+  <li><strong>平行移動・切り出し</strong>：位置ずれに強くする。</li>
+  <li><strong>左右反転</strong>：左右対称性を利用する。ただし文字認識では注意が必要。</li>
+  <li><strong>拡大縮小</strong>：サイズ変化に対応しやすくする。</li>
+  <li><strong>色調変化・明るさ変化</strong>：照明条件の違いに耐えやすくする。</li>
+  <li><strong>ノイズ付加</strong>：現実の観測ノイズに対する頑健性を高める。</li>
+</ul>
+<p>最近では Mixup や CutMix のように、複数画像やラベルを組み合わせる高度な拡張も使われるが、G検定ではまず「意味を壊さない変換によって汎化性能を高める」という基本思想が重要である。</p>
+
+<h2>5. 何でも増やせばよいわけではない</h2>
+<p>データ拡張には条件がある。変換後もラベルの意味が保たれることだ。数字「6」を回転させると「9」に見えるかもしれないし、顔画像で左右反転すると意味が変わる場面もある。医療画像では左右の臓器位置が診断に重要なら、単純反転は不適切である。</p>
+<div class="warn">
+<p><strong>注意：</strong>データ拡張は「タスクに対して妥当な変換」だけが有効である。意味を壊す変換は、データを増やすどころか誤学習を生む。</p>
+</div>
+<p>この点は試験でも実務でも重要である。データ拡張は魔法ではなく、<strong>ドメイン知識を踏まえた設計</strong>である。つまり、どの変換が妥当かを判断するには、その対象世界の構造を理解していなければならない。</p>
+
+<h2>6. 過学習との関係</h2>
+<p>過学習とは、訓練データに特有の細部を覚え込み、未知データにうまく対応できない状態である。データ拡張は、訓練時に見える条件を多様にすることで、特定の見え方に過度適応するのを抑えやすい。したがって、Dropout や正則化と同様に、<strong>汎化性能を高めるための代表的手段</strong>と位置づけられる。</p>
+<p>ただし、データ拡張だけで全ての過学習が解決するわけではない。モデル容量が大きすぎたり、ラベルノイズが強かったりすれば別の対策も必要である。ここでも重要なのは、複数の対策を組み合わせてバランスを見る発想である。</p>
+
+<h2>7. 他概念との関係</h2>
+<p>データ拡張は、ハイパーパラメータそのものではないが、しばしば「どの拡張をどの強さで使うか」はハイパーパラメータ的に扱われる。さらに、転移学習やファインチューニングと組み合わせると、少量データでも高性能を狙いやすくなる。</p>
+<p>また、CNNが位置ずれや局所構造に強いことと、データ拡張による位置・角度の多様化は相性がよい。次の数ユニットで扱う転移学習やCNNは、データ拡張の意義をより具体的に感じやすい分野である。</p>
+
+<h2>8. 実務との接点</h2>
+<p>現場では、「データが足りないからまず増やす」と言って新規収集だけを考えがちだが、実務上は収集が高コストなことも多い。そのときデータ拡張は非常に有力である。たとえば製造業の外観検査、医療画像、ドローン画像などでは、撮影条件の揺れや位置ずれに強いモデルを作るために拡張がよく使われる。</p>
+<p>一方で、意味を壊す拡張を入れると逆効果になる。したがって、データ拡張は単なる前処理ではなく、<strong>タスク理解に根ざした学習戦略</strong>として考える必要がある。</p>
+
+<h2>9. 試験ポイント</h2>
+<ul>
+  <li>データ拡張の目的は、見かけの件数増ではなく<strong>汎化性能向上</strong>である。</li>
+  <li>回転、平行移動、拡大縮小、反転、ノイズ付加などが代表例。</li>
+  <li>ラベルの意味を保つ変換だけが有効である。</li>
+  <li>過学習対策として、正則化やDropoutと並ぶ代表手段である。</li>
+</ul>
+
+<h2>10. 人に説明するなら</h2>
+<div class="section-box">
+<p>データ拡張とは、元の訓練データに少し変化を加えた別バージョンを作り、モデルに多様な見え方を学ばせる方法である。画像なら回転や反転、明るさ変更などが代表的で、目的はデータ件数を見せかけで増やすことではなく、未知データにも強いモデルを作ることにある。</p>
+</div>
+
+<h2>11. 次回への橋渡し</h2>
+<p>データが少ないときの工夫は、拡張だけではない。次は、すでに別の大量データで学習済みのモデルを利用する<strong>転移学習</strong>を扱う。これは「ゼロから学ばせない」という発想であり、少量データ時代の深層学習で極めて重要である。</p>
+<p class="small">次ユニット：G-U033「転移学習 ― 学習済みモデルを使う理由」</p>
+
+<div class="unit-nav"><a href="g_u031.html">← G-U031</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u033.html">G-U033 →</a></div>
+</div></article></div>
+</body>
+</html>

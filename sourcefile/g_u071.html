@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>G-U071：RLHF・RAG・幻覚</title><style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style></head><body><div class="container"><div class="page"><div class="page-header"><div class="header-badge">G検定 共有学習ユニット</div><h1>G-U071：RLHF・RAG・幻覚</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+<p class="lead">生成AIを実務で使う段階になると、モデル単体の性能だけでは足りない。人の意図に沿った応答へ整える仕組み、外部知識を参照させる仕組み、そしてもっともらしい誤りにどう向き合うかが重要になる。本ユニットでは RLHF・RAG・幻覚を、現代LLM運用の中核論点として整理する。</p><div class="summary"><strong>このユニットの要点</strong><ul><li>RLHF は人間の好みに沿う応答へモデルを寄せる調整枠組みである。</li><li>RAG は外部知識を検索・参照してから生成する構成であり、基盤モデル単体の知識限界を補う。</li><li>幻覚は流暢さと正確さのズレから生じる代表的失敗であり、システム設計全体で対処する必要がある。</li></ul></div><h2>1. 今回の位置づけ</h2>
+<p>前ユニットでは、生成AI・基盤モデル・Instruction Tuning を整理した。今回はその続きとして、「高性能な基盤モデルを、どう業務で使える形へ近づけるか」を扱う。モデルが大きくても、それだけで正しく、根拠付きで、意図どおりに答えられるわけではない。そのギャップを埋める代表的な発想が RLHF と RAG であり、そこから見えてくる失敗形が幻覚である。</p>
+<h2>2. 結論</h2>
+<p>RLHF は <strong>人が好ましいと感じる応答へモデルを寄せる調整</strong>、RAG は <strong>外部知識を検索して参照しながら生成する構成</strong>、幻覚は <strong>もっともらしいが誤った内容を生成する現象</strong> と整理できる。3つは別概念だが、実務では密接に結び付き、生成AIシステムの品質を大きく左右する。</p>
+<div class="note"><strong>重要：</strong>基盤モデル単体の賢さと、業務で安心して使えるシステムであることは同じではない。RLHF や RAG は、その差を埋めるための実務上の工夫である。</div>
+<div class="section-box"><p><strong>図で見る：</strong>RLHF（人間フィードバックによる強化学習）のループ</p>
+<svg viewBox="0 0 900 310" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="ar8" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+  <polygon points="0 0,8 3,0 6" fill="#1e40af"/>
+</marker>
+<style>
+.ttl{fill:#1e3a6e;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;}
+.sub{fill:#4b5563;font-size:11px;font-family:sans-serif;text-anchor:middle;}
+.step{rx:10;ry:10;}
+.slbl{font-size:12px;font-family:sans-serif;text-anchor:middle;dominant-baseline:central;}
+.num{font-weight:700;font-size:14px;font-family:sans-serif;text-anchor:middle;dominant-baseline:central;}
+</style>
+</defs>
+<text x="450" y="22" class="ttl">RLHF の4ステップサイクル</text>
+
+<!-- ステップ1: LLM生成 -->
+<rect x="30" y="50" width="170" height="90" rx="10" fill="#1e3a6e"/>
+<text x="115" y="82" style="fill:#bfdbfe;font-size:11px;font-family:sans-serif;text-anchor:middle;">① LLM が</text>
+<text x="115" y="98" style="fill:#fff;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;">複数の回答を生成</text>
+<text x="115" y="114" style="fill:#bfdbfe;font-size:11px;font-family:sans-serif;text-anchor:middle;">同じ質問に対して</text>
+<text x="115" y="128" style="fill:#bfdbfe;font-size:11px;font-family:sans-serif;text-anchor:middle;">複数の候補回答を出力</text>
+
+<!-- 矢印 1→2 -->
+<line x1="200" y1="95" x2="270" y2="95" stroke="#1e40af" stroke-width="2" marker-end="url(#ar8)"/>
+
+<!-- ステップ2: 人間評価 -->
+<rect x="272" y="50" width="170" height="90" rx="10" fill="#065f46"/>
+<text x="357" y="82" style="fill:#a7f3d0;font-size:11px;font-family:sans-serif;text-anchor:middle;">② 人間が</text>
+<text x="357" y="98" style="fill:#fff;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;">回答をランキング</text>
+<text x="357" y="114" style="fill:#a7f3d0;font-size:11px;font-family:sans-serif;text-anchor:middle;">回答A &gt; 回答B &gt; 回答C</text>
+<text x="357" y="128" style="fill:#a7f3d0;font-size:11px;font-family:sans-serif;text-anchor:middle;">のように優劣を評価</text>
+
+<!-- 矢印 2→3 -->
+<line x1="442" y1="95" x2="512" y2="95" stroke="#1e40af" stroke-width="2" marker-end="url(#ar8)"/>
+
+<!-- ステップ3: 報酬モデル学習 -->
+<rect x="514" y="50" width="170" height="90" rx="10" fill="#7c2d12"/>
+<text x="599" y="82" style="fill:#fed7aa;font-size:11px;font-family:sans-serif;text-anchor:middle;">③ 報酬モデルを</text>
+<text x="599" y="98" style="fill:#fff;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;">学習</text>
+<text x="599" y="114" style="fill:#fed7aa;font-size:11px;font-family:sans-serif;text-anchor:middle;">人間の評価を模倣する</text>
+<text x="599" y="128" style="fill:#fed7aa;font-size:11px;font-family:sans-serif;text-anchor:middle;">スコア関数 RM(回答)</text>
+
+<!-- 矢印 3→4 -->
+<line x1="684" y1="95" x2="754" y2="95" stroke="#1e40af" stroke-width="2" marker-end="url(#ar8)"/>
+
+<!-- ステップ4: PPO更新 -->
+<rect x="756" y="50" width="114" height="90" rx="10" fill="#1e40af"/>
+<text x="813" y="78" style="fill:#bfdbfe;font-size:11px;font-family:sans-serif;text-anchor:middle;">④ PPO で</text>
+<text x="813" y="94" style="fill:#fff;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;">LLM を更新</text>
+<text x="813" y="112" style="fill:#bfdbfe;font-size:10px;font-family:sans-serif;text-anchor:middle;">報酬モデルの</text>
+<text x="813" y="126" style="fill:#bfdbfe;font-size:10px;font-family:sans-serif;text-anchor:middle;">スコアを最大化</text>
+
+<!-- 矢印 4→1 （折り返し） -->
+<line x1="813" y1="140" x2="813" y2="180" stroke="#6b7280" stroke-width="1.5"/>
+<line x1="813" y1="180" x2="115" y2="180" stroke="#6b7280" stroke-width="1.5"/>
+<line x1="115" y1="180" x2="115" y2="142" stroke="#6b7280" stroke-width="1.5" marker-end="url(#ar8)"/>
+<text x="465" y="196" style="fill:#6b7280;font-size:10px;font-family:sans-serif;text-anchor:middle;">繰り返し → より人間の好みに沿った出力へ</text>
+
+<!-- 補足説明 -->
+<rect x="30" y="218" width="840" height="78" rx="8" fill="#eff6ff" stroke="#c7d2fe" stroke-width="1"/>
+<text x="450" y="238" style="fill:#1e3a6e;font-weight:700;font-size:12px;font-family:sans-serif;text-anchor:middle;">RLHF の目的：正確さだけでなく「人間にとって役立つ・無害・正直な回答」を学習させる</text>
+<text x="450" y="256" class="sub">PPO（Proximal Policy Optimization）：ポリシーが大きく変わりすぎないよう制約をかけながら更新する強化学習手法</text>
+<text x="450" y="272" class="sub">InstructGPT（ChatGPTの前身）の登場でLLMの実用性が飛躍的に向上した主な技術的要因</text>
+<text x="450" y="288" class="sub">KLダイバージェンスペナルティを加えて事前学習モデルから逸脱しすぎないよう制御する</text>
+</svg></div>
+<h2>3. RLHFとは何か</h2>
+<p>RLHF は <strong>Reinforcement Learning from Human Feedback</strong> の略である。人間が複数の応答候補を比較し、どちらがより望ましいかを与えることで、モデルを人間の期待に沿う方向へ調整する枠組みである。</p>
+<p>ここでいう「望ましい」とは、単に正解であることだけではない。無礼でない、危険助長しない、冗長すぎない、指示に従う、といった対話品質も含まれる。つまり RLHF は、知識そのものを増やすよりも、<strong>応答のふるまいを人間中心に整える</strong>役割が強い。</p>
+<table>
+<tr><th>観点</th><th>Instruction Tuning</th><th>RLHF</th></tr>
+<tr><td>目的</td><td>指示に従いやすくする</td><td>人にとってより望ましい応答へ寄せる</td></tr>
+<tr><td>主なデータ</td><td>指示と模範応答</td><td>人間による好み比較や評価</td></tr>
+<tr><td>直感</td><td>答え方の型を教える</td><td>答え方の質感を磨く</td></tr>
+</table>
+<p>G検定では、Instruction Tuning と RLHF を混同しないことが重要である。前者は教師あり調整、後者は人間フィードバックにもとづく追加最適化として整理すると理解しやすい。</p>
+<h2>4. RAGとは何か</h2>
+<p>RAG は <strong>Retrieval-Augmented Generation</strong> の略である。ユーザの質問に対して、まず関連文書を検索し、その結果を参照しながら回答生成する構成を指す。つまり、モデル内部の重みだけで答えるのでなく、<strong>外部知識を取りに行ってから生成する</strong>のが特徴である。</p>
+<p>RAG が重要なのは、LLM が学習時点以降の情報に弱いこと、企業内文書や最新マニュアルのような学習済みでない情報を使いたいこと、回答根拠を文書へ結び付けたいことにある。</p>
+<div class="section-box">
+<p><strong>典型的な流れ：</strong><br>
+ユーザ質問 → 質問をベクトル化 → 類似文書検索 → 関連文書を文脈へ追加 → 回答生成</p>
+</div>
+<p>ここでは Embedding とベクトル検索が重要になる。RAG は強力だが、検索対象や検索品質が悪ければ生成品質も上がらない。</p>
+<h2>5. 幻覚（Hallucination）</h2>
+<p>幻覚とは、生成AI が <strong>もっともらしいが誤った内容</strong> を出す現象である。存在しない論文を挙げる、誤った仕様を断定する、文脈にない事実を補ってしまう、などが典型例である。</p>
+<p>背景には、LLM が本質的に「次にもっとも自然らしいトークン」を予測する仕組みであることがある。これは文章の流暢さには強いが、真偽照合を内蔵しているわけではない。そのため、知らないことに対しても、自然な文章を返してしまうことがある。</p>
+<div class="warn"><strong>注意：</strong>流暢で自信ありげな出力ほど危険な場合がある。生成AIの品質確認では、文体よりも根拠と検証可能性が重要である。</div>
+<h2>6. 3者の関係</h2>
+<p>RLHF は応答の望ましさを改善し、RAG は知識アクセスを強化し、幻覚はそれでも残りうる失敗現象である。したがって、「RLHF を入れたから幻覚がなくなる」「RAG を入れたから完全に正しくなる」と考えるのは誤りである。</p>
+<ul>
+<li><strong>RLHF：</strong>答え方の振る舞い改善</li>
+<li><strong>RAG：</strong>知識アクセスの強化</li>
+<li><strong>幻覚対策：</strong>検索品質改善、根拠提示、プロンプト設計、ヒューマンレビューなどの総合対応</li>
+</ul>
+<h2>7. 実務での論点</h2>
+<p>業務で生成AIを使う場合、重要なのは単発精度よりも、<strong>誤答時にどう扱うか</strong>である。FAQ なら人手エスカレーション、文書要約なら原文リンク表示、社内検索なら引用箇所提示、といった設計が必要になる。</p>
+<p>また、RAG を使っても参照文書が古い、権限管理が不適切、断片文書の切り方が悪い、検索対象が狭いと性能は落ちる。したがって RAG は単なる機能でなく、<strong>知識基盤設計</strong>と見るべきである。</p>
+<h2>8. 試験ポイント</h2>
+<ul>
+<li>RLHF は人間フィードバックを用いた応答調整である。</li>
+<li>RAG は外部知識を検索・参照しながら生成する構成である。</li>
+<li>幻覚は流暢さと正確さのズレから生じる代表的問題である。</li>
+<li>Instruction Tuning と RLHF を混同しない。</li>
+</ul>
+<h2>9. 次回への橋渡し</h2>
+<p>生成AIを実運用するには、性能だけでなく社会実装上のルールが要る。次は、公平性・説明可能性・著作権・責任分界を含む <strong>AI倫理・法務・ガバナンス</strong> を整理する。</p>
+<div class="unit-nav"><a href="G-U066-070_cap.html">← G-U066-070_cap</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u072.html">G-U072 →</a></div></div></div></div></body></html>

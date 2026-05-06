@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>G-U001：AIとは何か？ ― 全体地図の最初の把握</title><style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style></head><body><div class="container"><article class="page"><div class="page-header"><h1>G-U001：AIとは何か？ ― 全体地図の最初の把握</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+<div class="lead"><p>このユニットでは、G検定学習の出発点として、<strong>AI・機械学習・深層学習の関係</strong>を全体地図として捉える。ここで重要なのは、AIを「何でもできる魔法の総称」として曖昧に覚えないことである。</p>
+<p>この範囲を曖昧なまま進むと、後でニューラルネット、生成AI、強化学習、データ活用の話題が全部ばらばらに見えてしまう。逆に、最初に地図を持っておけば、後続ユニットを<strong>どこに位置づける知識なのか</strong>を常に説明できる。</p></div>
+<h2>1. 今回の位置づけ</h2>
+<p>G検定の学習では、個別技術を先に覚えるよりも、まず「AIという大きな箱の中に何が入っているか」を整理した方が理解が安定する。U001〜U005は、そのための導入ブロックであり、概念の骨格を作る範囲である。</p>
+<p>特にU001は、以後の全ユニットで繰り返し参照される基礎地図を与える。ここで整理すべきなのは、<strong>AI ⊃ 機械学習 ⊃ 深層学習</strong> という包含関係と、「ルールで作る知能」と「データから学ぶ知能」の違いである。</p>
+<h2>2. 結論</h2>
+<div class="section-box">
+<p><strong>AI（Artificial Intelligence）</strong> は、人間が知的だとみなす働きを機械で実現しようとする広い概念である。その一部に、データから規則性を学ぶ <strong>機械学習</strong> があり、さらにその一部として、多層ニューラルネットを用いて表現学習を行う <strong>深層学習</strong> がある。</p>
+<p>したがって、深層学習だけがAIではない。逆に、AIという言葉を聞いたときには、「それはルールベースなのか、機械学習なのか、深層学習なのか」を切り分けて考えることが大切である。</p>
+</div>
+<h2>3. よくある誤解</h2>
+<p>実務や報道では、AIという言葉が非常に広く使われる。そのため、AIと機械学習を同義に扱ったり、ChatGPTのような生成AIだけをAIの中心だと感じたりしやすい。しかしG検定では、こうした曖昧な使い方を一段整理して理解する必要がある。</p>
+<ul>
+<li><strong>誤解1：</strong>AI = 深層学習。実際には、探索、推論、知識表現、エキスパートシステム、機械学習、ロボティクスなど、AIはもっと広い。</li>
+<li><strong>誤解2：</strong>機械学習なら必ず深層学習。実際には、線形回帰、決定木、SVM、クラスタリングなど、深層学習以外の手法も多い。</li>
+<li><strong>誤解3：</strong>AIは「考えている」。実際には、目的関数や規則のもとで入力を処理しているのであり、人間と同じ意味で理解しているとは限らない。</li>
+</ul>
+<div class="warn">
+<p><strong>試験では、広い概念と狭い概念の取り違え</strong> が頻出である。「AIに含まれるもの」「機械学習に含まれるもの」「深層学習の特徴」を分けて言い直せる状態が望ましい。</p>
+</div>
+<h2>4. 3層の入れ子構造</h2>
+<p>包含関係を図ではなく言葉で表現すると、次のようになる。</p>
+<table>
+<tr><th>層</th><th>何を表すか</th><th>代表例</th></tr>
+<tr><td>AI</td><td>知的な処理一般を機械で実現する広い枠組み</td><td>探索、推論、知識表現、機械学習、ロボット制御</td></tr>
+<tr><td>機械学習</td><td>明示的に全ルールを書かず、データから規則を学ぶ方法</td><td>回帰、分類、クラスタリング、決定木、SVM</td></tr>
+<tr><td>深層学習</td><td>多層ニューラルネットを使って特徴も含めて学習する方法</td><td>CNN、RNN、Transformer など</td></tr>
+</table>
+<div class="section-box">
+<p><strong>図で見る：</strong>AI・機械学習・深層学習の包含関係</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" style="width:100%;height:auto;display:block;">
+  <ellipse cx="450" cy="158" rx="400" ry="132" fill="#f0f4f9" stroke="#1e40af" stroke-width="2.5" />
+  <ellipse cx="450" cy="168" rx="268" ry="97" fill="#dbeafe" stroke="#1e40af" stroke-width="2.5" />
+  <ellipse cx="450" cy="176" rx="143" ry="66" fill="#1e40af" stroke="#1e3a6e" stroke-width="2" />
+  <text x="450" y="182" text-anchor="middle" fill="white" font-size="19" font-weight="bold" font-family="sans-serif">深層学習</text>
+  <text x="450" y="220" text-anchor="middle" fill="#93c5fd" font-size="12" font-family="sans-serif">NN・CNN・RNN・Transformer</text>
+  <text x="450" y="112" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="bold" font-family="sans-serif">機械学習</text>
+  <text x="450" y="131" text-anchor="middle" fill="#FFFFFF" font-size="12" font-family="sans-serif">決定木・SVM・回帰分析 等</text>
+  <text x="450" y="38" text-anchor="middle" fill="#1e3a6e" font-size="18" font-weight="bold" font-family="sans-serif">AI（人工知能）</text>
+  <text x="450" y="58" text-anchor="middle" fill="#4b5563" font-size="12" font-family="sans-serif">探索・論理・エキスパートシステム・機械学習 等</text>
+</svg>
+</div>
+<p>この整理が重要なのは、AIの進歩を議論するときに「どのレイヤの話か」が変わるからである。たとえば、囲碁AIの進歩は探索や強化学習の話を含むし、画像認識の飛躍は深層学習の話に強く結びつく。</p>
+<h2>5. ルールベースと学習ベース</h2>
+<p>AIの実現方法は大きく二つの方向で考えられる。ひとつは、人間が知識や規則を与える方法。もうひとつは、データからモデルに規則を学ばせる方法である。</p>
+<p>前者は、条件分岐や知識ベースを丁寧に作ることで判断を行う。後者は、正解ラベルや大量データから、入力と出力の対応関係をモデル内部に獲得させる。現在のAIブームは後者が中心だが、前者の考え方が不要になったわけではない。</p>
+<div class="note">
+<p>製造業や業務システムでは、<strong>明確なルールはルールとして書き、曖昧で複雑な部分だけ学習モデルに任せる</strong> という分担が実務的である。AI化とは、すべてを深層学習に置き換えることではない。</p>
+</div>
+<h2>6. たとえ話：猫を見分ける場合</h2>
+<p>AIの違いを直感的に捉えるには、「画像の中に猫がいるか」を判定する問題がわかりやすい。</p>
+<ul>
+<li>ルールベースなら、「耳の形が三角」「ひげがある」「目がこう見える」など、人間が特徴を定義して判定規則を書く。</li>
+<li>機械学習なら、人間が用意した特徴量を使い、「この特徴量の組み合わせなら猫らしい」と学習する。</li>
+<li>深層学習なら、画像からどの特徴が重要かも含めて多層ネットワークが学習する。</li>
+</ul>
+<p>つまり、深層学習の強みは、<strong>特徴設計の多くをモデル側に委ねやすい</strong>点にある。ただし、その分だけ大量データや計算資源が必要になる場合が多い。</p>
+<h2>7. なぜこの整理が大事か</h2>
+<p>この地図が大事なのは、後で出てくる用語の居場所が分かるからである。たとえば、教師あり学習・教師なし学習・強化学習は機械学習の内部の分類であり、CNNやTransformerは深層学習の具体的アーキテクチャである。知識グラフや探索アルゴリズムはAI全体の中の別の重要領域である。</p>
+<p>学習が進むほど、個々の技術名に注意が向きやすい。しかし、G検定のような体系学習では「それが何の一部なのか」を見失わないことが理解の安定につながる。</p>
+<h2>8. 他概念との接続</h2>
+<p>U002ではAIの歴史を扱うが、その際も「なぜある時代は推論中心で、ある時代は知識中心で、現在は学習中心なのか」をこの地図に沿って理解すると流れが見えやすい。U003以降では機械学習内部の分類に入るため、U001はその入口として機能する。</p>
+<p>また、生成AIを理解するときも、まず「生成AIはAIの一部であり、その中でも深層学習ベースの大規模モデルが中心」という位置づけで見る必要がある。言葉の大きさをそろえて比較するのが重要である。</p>
+<h2>9. 試験ポイント</h2>
+<div class="section-box">
+<ul>
+<li>AI・機械学習・深層学習の包含関係を言えること。</li>
+<li>深層学習は機械学習の一部であり、AI全体そのものではないこと。</li>
+<li>ルールベースのAIとデータ駆動型AIの違いを説明できること。</li>
+<li>「AI」という語が実務・報道で広く使われるため、文脈に応じて狭義と広義を区別する必要があること。</li>
+</ul>
+</div>
+<p class="small">このユニットは、後続の歴史・学習方式・データセット設計を受け止める土台である。用語の位置関係を曖昧にしないことが最優先である。</p>
+<h2>10. 実務での見え方</h2>
+<p>実務では、「AIを入れたい」という相談が来ても、その中身はかなり違う。単純な条件分岐で足りるのか、既存データで予測したいのか、大量画像から特徴も含めて学ばせたいのかで、必要な技術もコストもまったく変わる。</p>
+<p>そのため、U001の地図は会話の起点にもなる。相手がAIと言ったときに、こちらが「それはルールベースの自動化か、機械学習か、深層学習か」と切り分けられると、議論が具体化しやすい。</p>
+<h2>11. 1分チェック</h2>
+<ul>
+<li>AI・機械学習・深層学習の包含関係を図なしで言えるか。</li>
+<li>ルールベースと学習ベースの違いを一文で説明できるか。</li>
+<li>生成AIがAI全体のどこに位置するかを説明できるか。</li>
+</ul>
+<div class="unit-nav"><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u002.html">G-U002 →</a></div></div></article></div></body></html>

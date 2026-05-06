@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>G-U073：総合整理① ― AI史から現代AIまでを一本にする</title><style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style></head><body><div class="container"><div class="page"><div class="page-header"><div class="header-badge">G検定 共有学習ユニット</div><h1>G-U073：総合整理① ― AI史から現代AIまでを一本にする</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+<p class="lead">ここまで、AIの歴史、古典的AI、機械学習、深層学習、生成AI、応用、ガバナンスまで見てきた。本ユニットでは、それらをばらばらの知識としてでなく、一本の流れとして再統合する。個別用語の暗記より、『なぜこの技術が次の技術を必要としたのか』を説明できることが重要である。</p><div class="summary"><strong>このユニットの要点</strong><ul><li>AIの流れは、ルール中心からデータ学習中心へ、さらに大規模事前学習済み基盤モデル中心へ進んだと整理できる。</li><li>各段階は前段階の弱みへの応答として現れた、と因果でつなぐと理解しやすい。</li><li>総合整理では、歴史・技術・応用を一本線で語れる状態を目指す。</li></ul></div><h2>1. 今回の位置づけ</h2>
+<p>総合整理①では、AI史から現代AIまでを因果でつなぎ直す。つまり、<strong>古典的AIで何が足りず、機械学習で何が進み、深層学習で何が変わり、生成AIで何が拡張されたか</strong>を一続きの物語として理解する。</p>
+<h2>2. 結論</h2>
+<p>AIの流れは、「知識を明示的に与える時代」から「データから学ぶ時代」へ、さらに「大規模事前学習済み基盤モデルを多目的利用する時代」へ進んだと整理できる。各時代は前時代の欠点への応答として現れた。</p>
+<div class="note"><strong>重要：</strong>AI史は単なる年表暗記ではなく、ボトルネックの連鎖として見ると理解しやすい。</div>
+<h2>3. 第1段階：古典的AI</h2>
+<p>初期AIでは、論理推論、探索、知識表現、エキスパートシステムが中心だった。特徴は、ルールや知識を人間が明示的に記述し、それに従って推論させることにある。</p>
+<p>この方式はルールが明確な問題では強かったが、現実世界の複雑さ、多数の例外、組合せ爆発、知識獲得ボトルネックに弱かった。そのため、ルールを積み増すほど運用が難しくなる限界が見えた。</p>
+<h2>4. 第2段階：機械学習</h2>
+<p>そこで重要になったのが、データからパターンを学ぶ機械学習である。特徴量設計と統計的学習により、すべてをルールで書かなくても予測や分類が可能になった。SVM、決定木、Random Forest などはその代表である。</p>
+<p>ただし、機械学習は <strong>良い特徴量を人が設計する必要</strong> があり、画像・音声・自然言語のような高次元データでは限界があった。</p>
+<h2>5. 第3段階：深層学習</h2>
+<p>深層学習は、特徴量そのものを多層ネットワークで自動的に学ばせる方向を切り開いた。CNN は画像、RNN/LSTM は系列、Attention/Transformer は長距離依存と並列化へ対応し、それぞれ従来のボトルネックを破った。</p>
+<p>ここで重要なのは、深層学習が単に『層が深いだけ』ではないことである。大量データ、GPU などの計算資源、勾配計算安定化技術、最適化手法の改良がそろって初めて、第3次AIブームが生じた。</p>
+<h2>6. 第4段階：生成AIと基盤モデル</h2>
+<p>Transformer と大規模事前学習がさらに進むと、個別タスク専用モデルより、<strong>大規模事前学習済みモデルを土台に複数用途へ転用する発想</strong>が強くなった。これが基盤モデルである。LLM はその代表例であり、生成AIブームを牽引した。</p>
+<p>生成AIは、文章や画像を新しく作る能力として注目されたが、同時に幻覚、著作権、ガバナンスなど新しい問題も浮上させた。</p>
+<h2>7. まとめ表</h2>
+<table>
+<tr><th>段階</th><th>中心発想</th><th>強み</th><th>弱み・次段階の理由</th></tr>
+<tr><td>古典的AI</td><td>ルールと推論</td><td>明示的知識で制御しやすい</td><td>組合せ爆発、知識獲得ボトルネック</td></tr>
+<tr><td>機械学習</td><td>データから学ぶ</td><td>ルール手書き不要</td><td>特徴量設計に人手が必要</td></tr>
+<tr><td>深層学習</td><td>表現も自動学習</td><td>画像・音声・言語に強い</td><td>大量データ・計算資源が必要</td></tr>
+<tr><td>基盤モデル</td><td>大規模事前学習と転用</td><td>多用途に利用可能</td><td>コスト、幻覚、ガバナンス課題</td></tr>
+</table>
+<h2>8. 試験ポイント</h2>
+<ul>
+<li>古典的AI → 機械学習 → 深層学習 → 基盤モデルの流れを因果で説明できるか。</li>
+<li>各段階の弱みが次段階の動機になっていることを理解しているか。</li>
+<li>第3次AIブームの条件を、データ・計算資源・アルゴリズムで整理できるか。</li>
+</ul>
+<h2>9. 次回への橋渡し</h2>
+<p>歴史の流れは一本になった。次は、ここまで出てきた主要モデル群を横に並べ、<strong>CNN、RNN、Transformer、GAN などの役割差</strong>を比較する。</p>
+<div class="unit-nav"><a href="g_u072.html">← G-U072</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u074.html">G-U074 →</a></div></div></div></div></body></html>

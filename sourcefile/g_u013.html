@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U013：知識表現とは何か</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U013：知識表現とは何か</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+<div class="lead">
+<p>推論や探索が働くためには、まず「何を知っているか」を機械が扱える形で表現しなければならない。今回のテーマである知識表現は、古典的AIの中心にある考え方であり、AIシステムにとっての“世界の書き方”に相当する。</p>
+<p>このユニットの核心は、<strong>知識は頭の中にあるだけでは使えず、形式化されて初めて推論の対象になる</strong>という点である。どのような記述形式を選ぶかによって、AIができる推論、扱える曖昧さ、保守のしやすさが変わる。</p>
+</div>
+
+<h2>1. 知識表現が必要な理由</h2>
+<p>人間は常識や経験を曖昧なまま使えるが、計算機はそうはいかない。たとえば「鳥は空を飛ぶ」という知識を持たせたいとき、人間なら例外としてペンギンやダチョウを思い浮かべられる。しかし計算機にとっては、何が一般則で、何が例外で、どの条件が優先するかを明示しないと扱えない。</p>
+<p>したがって知識表現の目的は、単なる保存ではなく、<strong>推論・検索・説明・更新</strong>ができるように知識を構造化することにある。知識をどう書くかは、AIがどう考えるかをほぼ決める。</p>
+
+<h2>2. 代表的な知識表現の考え方</h2>
+<p>古典的AIでは、論理、ルール、意味ネットワーク、フレームなど、いくつかの表現形式が発展した。論理は厳密性が高く、規則の意味を明示しやすい。一方で、ルールベースは「もしAならB」の形で記述でき、専門家知識を比較的入力しやすい。意味ネットワークは概念間の関係をグラフ的に表し、フレームは対象の属性をまとまりとして表現する。</p>
+<table>
+<tr><th>表現形式</th><th>特徴</th><th>向く場面</th></tr>
+<tr><td>論理表現</td><td>厳密で推論規則が明快</td><td>定理証明、整合性重視の問題</td></tr>
+<tr><td>ルール表現</td><td>if-thenで書きやすい</td><td>診断、判断支援、専門家知識の実装</td></tr>
+<tr><td>意味ネットワーク</td><td>概念の関係を視覚的に持てる</td><td>概念階層、関連検索</td></tr>
+<tr><td>フレーム</td><td>属性を束ねて対象を表せる</td><td>対象記述、スロットによる整理</td></tr>
+</table>
+<p>重要なのは、どれか1つが絶対的に優れているわけではないことだ。何を表したいか、どの推論をしたいかによって適切な表現は変わる。</p>
+
+<h2>3. ルールベース表現</h2>
+<p>G検定で特に出会いやすいのは、ルールベースの発想である。これは「もし条件が成り立てば、結論を導く」という形で知識を並べる方法で、専門家の判断手順を形式化しやすい。たとえば「もし高熱かつ咳なら呼吸器感染を疑う」といった形で書ける。</p>
+<p>ルールベースの長所は、知識の意味が比較的わかりやすく、推論の過程を追跡しやすい点にある。一方で、ルールが増えると衝突や例外管理が難しくなり、知識ベースの保守が重くなる。つまり「書きやすさ」と「大規模化したときの複雑さ」が同時に存在する。</p>
+<div class="note">
+<p>ルールは人間にとって直感的だが、現実世界の知識は例外だらけである。そのため、単純な if-then の積み重ねだけでは現実の曖昧さを受け止めにくい。</p>
+</div>
+
+<div class="section-box"><p><strong>図で見る：</strong>意味ネットワークの概念 ― ノード（概念）をリンク（関係）で接続する</p>
+<svg viewBox="0 0 900 300" style="width:100%;height:auto;display:block;" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arh" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+  <polygon points="0 0,8 3,0 6" fill="#1e40af"/>
+</marker>
+<style>
+.cn{fill:#dbeafe;stroke:#1e40af;stroke-width:2;rx:20;ry:20;}
+.cl{fill:#1e3a6e;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;dominant-baseline:central;}
+.ar{stroke:#1e40af;stroke-width:1.5;fill:none;marker-end:url(#arh);}
+.el{fill:#4b5563;font-size:10px;font-family:sans-serif;text-anchor:middle;}
+.ttl{fill:#1e3a6e;font-weight:700;font-size:13px;font-family:sans-serif;text-anchor:middle;}
+</style>
+</defs>
+<text x="450" y="22" class="ttl">意味ネットワーク：概念をノード、関係をリンクで表現</text>
+<!-- ノード定義 (概念ノード) -->
+<!-- 動物 -->
+<rect x="380" y="38" width="140" height="36" rx="18" class="cn"/>
+<text x="450" y="56" class="cl">動物</text>
+<!-- 哺乳類 -->
+<rect x="380" y="118" width="140" height="36" rx="18" class="cn"/>
+<text x="450" y="136" class="cl">哺乳類</text>
+<!-- 犬 -->
+<rect x="200" y="200" width="140" height="36" rx="18" class="cn"/>
+<text x="270" y="218" class="cl">犬</text>
+<!-- 猫 -->
+<rect x="380" y="200" width="140" height="36" rx="18" class="cn"/>
+<text x="450" y="218" class="cl">猫</text>
+<!-- チワワ -->
+<rect x="80" y="256" width="140" height="36" rx="18" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+<text x="150" y="274" class="cl">チワワ</text>
+<!-- 四本足 -->
+<rect x="560" y="200" width="140" height="36" rx="18" fill="#fef9c3" stroke="#92400e" stroke-width="2"/>
+<text x="630" y="218" style="fill:#92400e;font-weight:700;font-size:12px;font-family:sans-serif;text-anchor:middle;dominant-baseline:central;">四本足</text>
+<!-- 矢印: 哺乳類→動物 is-a -->
+<line x1="450" y1="118" x2="450" y2="78" class="ar"/>
+<text x="465" y="100" class="el">is-a</text>
+<!-- 矢印: 犬→哺乳類 is-a -->
+<line x1="305" y1="210" x2="397" y2="140" class="ar"/>
+<text x="330" y="168" class="el">is-a</text>
+<!-- 矢印: 猫→哺乳類 is-a -->
+<line x1="450" y1="200" x2="450" y2="158" class="ar"/>
+<text x="465" y="180" class="el">is-a</text>
+<!-- 矢印: チワワ→犬 is-a -->
+<line x1="185" y1="265" x2="216" y2="234" class="ar"/>
+<text x="185" y="252" class="el">is-a</text>
+<!-- 矢印: 犬→四本足 has -->
+<line x1="340" y1="215" x2="556" y2="215" class="ar"/>
+<text x="450" y="208" class="el">has</text>
+<!-- 説明 -->
+<text x="450" y="302" style="fill:#4b5563;font-size:11px;font-family:sans-serif;text-anchor:middle;">is-a リンクで上位概念（スーパークラス）を継承 ／ has でプロパティを記述</text>
+</svg></div>
+<h2>4. 意味ネットワークとフレーム</h2>
+<p>意味ネットワークでは、概念や対象をノード、関係をリンクとして表す。たとえば「犬 is-a 動物」「犬 has-part しっぽ」のように、関係性そのものを表現しやすい。概念間の継承や階層の理解に向いているため、知識の全体構造を扱いたいときに有効である。</p>
+<p>フレームは、ある対象について典型的な属性をまとめた枠組みである。たとえば「レストラン」というフレームに、場所、メニュー、営業時間、支払い方法などのスロットを持たせる。こうすると、対象ごとの情報をまとまりとして扱える。現代的な感覚でいえば、オブジェクト指向的な整理に近い側面もある。</p>
+
+<h2>5. 知識表現の難しさ</h2>
+<p>知識表現で最も難しいのは、現実世界が曖昧で文脈依存だという点である。たとえば「重い」という語は、ノートPCとトラックでは基準が異なる。人間なら文脈で解釈できるが、計算機では条件を細かく書かないと誤解が生じやすい。さらに常識知識は数が膨大で、暗黙の了解を全て明示するのは極めて困難である。</p>
+<p>この問題は後のエキスパートシステムやAIの冬にもつながる。つまり、知識表現は魅力的だが、<strong>現実の複雑さを人手で記述しきるのが難しい</strong>という壁を常に抱えていた。</p>
+<div class="warn">
+<p>知識表現の失敗を「昔の技術だから古い」で片づけない方がよい。大規模言語モデルの時代でも、知識の更新、構造化、根拠づけ、外部知識との接続は依然として重要課題である。</p>
+</div>
+
+<h2>6. 現代AIとの接点</h2>
+<p>深層学習はデータから表現を学ぶが、その内部表現は人間にとって明示的でないことが多い。これに対して知識表現は、何がどのように記述されているかが明確である。現代AIでは、この両者を組み合わせる方向が注目される。たとえば知識グラフ、ルール制約付き学習、RAGのような外部知識参照は、知識表現の問題意識を引き継いでいる。</p>
+<p>したがって、知識表現は「過去の失敗作」ではなく、AIに知識をどう持たせるかという永続的なテーマの一部として理解するのが適切である。</p>
+
+<h2>7. 試験で押さえる点</h2>
+<ul>
+<li>知識表現は、知識を推論可能な形式へ構造化する考え方である。</li>
+<li>論理、ルール、意味ネットワーク、フレームが代表的な表現形式である。</li>
+<li>ルールベースは書きやすいが、大規模化すると例外管理や整合性維持が難しい。</li>
+<li>意味ネットワークは関係性、フレームは属性のまとまりを表しやすい。</li>
+<li>現代AIでも知識の構造化という問題は消えていない。</li>
+</ul>
+
+<div class="unit-nav"><a href="g_u012.html">← G-U012</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u014.html">G-U014 →</a></div>
+</div></article></div>
+</body>
+</html>

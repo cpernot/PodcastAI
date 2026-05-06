@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-U034：ファインチューニング ― どこまで学び直すか</title>
+<style>:root{
+  --bg:#f0f4f9; --card:#ffffff; --text:#1f2937; --sub:#4b5563; --line:#c5cfe0;
+  --accent:#1e40af; --accent-soft:#dbeafe; --note-bg:#eef2ff; --note-line:#c7d2fe;
+  --warn-bg:#fff7ed; --warn-line:#fdba74; --nav-bg:#f3f4f6;
+  --header-grad:linear-gradient(135deg,#1e3a6e 0%,#1e40af 60%,#2563eb 100%);
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);color:var(--text);line-height:1.82;}
+.container{max-width:1080px;margin:0 auto;padding:32px 24px 64px;}
+.page{background:var(--card);border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.page-header{background:var(--header-grad);padding:26px 32px 20px;}
+.page-header h1{color:#ffffff;font-size:1.75rem;margin:0;line-height:1.35;border:none;padding:0;}
+.page-header .header-badge{display:inline-block;background:rgba(255,255,255,0.18);color:#bfdbfe;border-radius:999px;padding:3px 10px;font-size:0.82rem;font-weight:700;margin-bottom:8px;letter-spacing:.04em;}
+.page-body{padding:24px 32px 50px;position:relative;}
+.logo-wrap{float:right;margin:0 0 14px 20px;}
+.logo-wrap img{width:88px;height:auto;mix-blend-mode:multiply;}
+h1,h2,h3{color:#111827;line-height:1.35;}
+h2{font-size:1.28rem;border-left:6px solid var(--accent);padding-left:12px;margin-top:2.0em;margin-bottom:0.7em;}
+h3{font-size:1.05rem;margin-top:1.4em;margin-bottom:0.5em;}
+p,li{font-size:1rem;}
+.lead{background:var(--accent-soft);border:1px solid #c7d2fe;border-radius:10px;padding:14px 16px;margin-bottom:20px;}
+.note{background:var(--note-bg);border:1px solid var(--note-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:14px 16px;margin:16px 0;}
+.section-box{background:#fafafa;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin:14px 0;}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;}
+th,td{border:1px solid #d1d5db;padding:10px 12px;vertical-align:top;text-align:left;}
+th{background:#eff6ff;}
+.unit-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;}
+.unit-nav a{display:inline-block;text-decoration:none;color:#111827;background:var(--nav-bg);border:1px solid #d1d5db;padding:10px 14px;border-radius:999px;}
+.unit-nav a:hover{background:var(--accent-soft);}
+.nav{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--nav-bg);border:1px solid #e5e7eb;padding:16px 18px;margin-top:36px;border-radius:12px;}
+.nav a{color:#1e40af;text-decoration:none;font-weight:700;}
+.nav a:hover{text-decoration:underline;}
+.nav-logo{width:56px;height:auto;mix-blend-mode:multiply;opacity:0.85;}
+.small{color:var(--sub);font-size:0.94rem;}
+ul,ol{padding-left:1.4rem;}
+code{background:#f3f4f6;border-radius:6px;padding:0.1em 0.4em;}
+</style>
+</head>
+<body>
+<div class="container"><article class="page"><div class="page-header"><h1>G-U034：ファインチューニング ― どこまで学び直すか</h1></div><div class="page-body"><div class="logo-wrap"><img src="logo.png" alt="AIAD"></div>
+
+<p class="lead">転移学習の知識を実際にどう適応させるかを扱う。層を固定する・一部だけ更新する・全部調整する、という判断の意味を整理する。</p>
+
+<h2>1. 今回の位置づけ</h2>
+<p>前回、転移学習は「学習済みモデルの知識を別課題へ移す考え方」だと整理した。今回はその具体的実装として、<strong>ファインチューニング</strong>を扱う。実務上は、転移学習を使うときに「どこまで重みを更新するか」が核心になる。</p>
+<p>G検定では、転移学習とファインチューニングの関係、層の固定と更新、学習率の扱いなどが混同されやすい。ここを構造的に押さえると、後続のCNN系ユニットも理解しやすくなる。</p>
+
+<h2>2. 結論</h2>
+<div class="section-box">
+<p>ファインチューニング（Fine-tuning）とは、事前学習済みモデルを新しい課題に合わせて<strong>追加学習により微調整する方法</strong>である。全部の層を更新する場合もあれば、一部の層だけ更新し、残りを固定する場合もある。</p>
+<p>本質は、既に得ている汎用知識を壊しすぎず、新しい課題に必要な部分だけを適応させることにある。したがってファインチューニングは、<strong>知識の再利用と課題適応のバランスを取る技術</strong>である。</p>
+</div>
+
+<h2>3. 典型的な進め方</h2>
+<p>まず、ImageNet などで事前学習したモデルを読み込み、出力層を新タスク用に差し替える。その後、下位層を固定したまま上位層だけ学習する、あるいは後半の数層だけ更新する、といった方針を取る。データが十分にある場合は全層を微調整することもある。</p>
+<table>
+<tr><th>方針</th><th>更新対象</th><th>向いている状況</th></tr>
+<tr><td>特徴抽出器として利用</td><td>大半の層を固定、最後だけ学習</td><td>データが少ない</td></tr>
+<tr><td>部分的ファインチューニング</td><td>上位層中心に更新</td><td>転移先がやや異なる</td></tr>
+<tr><td>全層ファインチューニング</td><td>全層を更新</td><td>データが比較的多く、転移先に十分合わせたい</td></tr>
+</table>
+
+<h2>4. なぜ全部そのまま使わないのか</h2>
+<p>事前学習済みモデルは便利だが、新しい課題に完全一致するわけではない。たとえば自然画像で学んだモデルを、工業製品の表面欠陥検出にそのまま使うと、下位層は役立っても上位層の意味表現はずれているかもしれない。そこで、必要な範囲だけ学び直す。</p>
+<p>一方で、全部を自由に更新すると、少量データでは事前学習で得た良い重みを壊してしまうこともある。これを避けるため、層を固定するという発想がある。ここに、ファインチューニングの設計判断がある。</p>
+
+<h2>5. 学習率との関係</h2>
+<p>ファインチューニングでは、しばしば通常より小さめの学習率を使う。理由は、すでに有意味な重みが入っているため、大きな更新をかけると既存知識を急に壊してしまうからである。特に下位層まで更新する場合は、慎重な学習率設定が重要になる。</p>
+<div class="note">
+<p><strong>要点：</strong>ランダム初期化モデルでは「積極的に学ぶ」学習率が必要な場面もあるが、ファインチューニングでは「壊しすぎない」学習率設計が重要になる。</p>
+</div>
+
+<h2>6. データ量との関係</h2>
+<p>データが少ないなら、固定する層を多くし、更新対象を限定する方が安全である。逆にデータが多ければ、上位層だけでなくより広い範囲を調整して、転移先に最適化しやすい。つまりファインチューニング方針は、<strong>転移元と転移先の近さ × 手元データ量</strong>で考えると整理しやすい。</p>
+<p>転移先がかなり似ていてデータが少ないなら、最後の分類器だけ差し替える程度でも十分なことがある。転移先が大きく違い、しかもデータが多いなら、深い層まで学び直す意義がある。</p>
+
+<h2>7. 転移学習との違い</h2>
+<p>繰り返しになるが、転移学習は上位概念、ファインチューニングは具体的方法である。転移学習の中には、特徴抽出器として固定利用するだけのケースも含まれる。ファインチューニングは、その中でも<strong>重みを更新して適応させる</strong>操作を特に指す。</p>
+<p>試験では「転移学習＝ファインチューニング」と短絡しないことが重要である。関係は包含であり、同一ではない。</p>
+
+<h2>8. 他概念との関係</h2>
+<p>ファインチューニングは、ハイパーパラメータ調整と密接に関わる。どの層を固定するか、学習率をどうするか、エポック数をどうするかは全て設計対象である。また、データ拡張と組み合わせることで、少量データでも過学習を抑えながら再学習しやすくなる。</p>
+<p>そして次ユニットのCNN入門は、画像分野で転移学習・ファインチューニングが広く使われる理由を支える基礎になる。なぜCNNが画像で強いのかを理解すると、事前学習済みCNNを使う意味もより明確になる。</p>
+
+<h2>9. 実務との接点</h2>
+<p>現場では「全層をいきなり学び直す」のではなく、まず最後の数層だけ調整して様子を見ることが多い。これは計算量を抑えつつ、既存知識を活かしやすいからである。性能が頭打ちなら、固定範囲を少しずつ緩める段階的戦略もよく用いられる。</p>
+<p>また、教育や説明の場では、「学習済みモデルをそのまま使う」のと「学習済みモデルを少し学び直す」の違いを言語化できるとよい。これが転移学習とファインチューニングの違いの実務的説明になる。</p>
+
+<h2>10. 試験ポイント</h2>
+<ul>
+  <li>ファインチューニングは、学習済みモデルを新タスク向けに追加学習で微調整する方法。</li>
+  <li>転移学習の具体的方法の一つであり、両者は同義ではない。</li>
+  <li>層の固定・更新範囲、学習率、データ量が重要な判断要素。</li>
+  <li>既存知識を壊しすぎず適応させるのが本質。</li>
+</ul>
+
+<h2>11. 人に説明するなら</h2>
+<div class="section-box">
+<p>ファインチューニングとは、すでに学習済みのAIモデルを新しい課題向けに少し学び直すことである。ゼロから全部作り直すのではなく、使えそうな知識は残し、必要な部分だけ調整する。少量データでも効率よく性能を引き上げやすいため、実務で非常に重要である。</p>
+</div>
+
+<h2>12. 次回への橋渡し</h2>
+<p>ここまでで、学習をうまく進めるための設計や再利用の話を見てきた。次は画像分野で中心的なモデルである<strong>CNN</strong>の入門に入る。CNNがなぜ画像に強いのかを理解すると、転移学習やファインチューニングが画像分野で広く使われる理由もより明瞭になる。</p>
+<p class="small">次ユニット：G-U035「CNN入門 ― 画像に強い理由」</p>
+
+<div class="unit-nav"><a href="g_u033.html">← G-U033</a><img src="logo.png" alt="AIAD" class="nav-logo"><a href="g_u035.html">G-U035 →</a></div>
+</div></article></div>
+</body>
+</html>
